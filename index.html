@@ -1,0 +1,3951 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      WanderWise — Smarter Trips, Happier Journeys | Kamran Mohsin
+    </title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta
+      name="description"
+      content="WanderWise is Pakistan's smartest travel planning platform. Plan trips to Swat, Hunza, Skardu with AI fatigue tracking, rain mode, group debt splitting & offline emergency sheets."
+    />
+    <meta name="author" content="Kamran Mohsin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- Professional icon system: Font Awesome (replaces decorative emoji UI icons) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      /* WanderWise layout adjustment: keep the AI Fund Calculator in the
+         empty space under the hero while leaving all other UI unchanged. */
+      .hero-left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-width: 0;
+      }
+
+      .hero-left-column .ai-fund-box {
+        margin-bottom: 0 !important;
+      }
+
+      @media (max-width: 900px) {
+        .hero-left-column {
+          gap: 16px;
+        }
+      }
+
+      /* =========================================================
+         WanderWise — Trip Pulse Interactive Companion
+         Added only to use the open area beside the planner.
+         ========================================================= */
+      .trip-pulse-card {
+        position: relative;
+        overflow: hidden;
+        padding: 18px;
+        border-radius: 16px;
+        border: 1px solid rgba(6, 182, 212, 0.22);
+        background:
+          radial-gradient(circle at 88% 12%, rgba(16, 185, 129, 0.16), transparent 34%),
+          linear-gradient(135deg, rgba(6, 182, 212, 0.07), rgba(99, 102, 241, 0.06));
+        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
+        min-height: 235px;
+      }
+
+      .trip-pulse-card::before {
+        content: "";
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        right: -65px;
+        bottom: -75px;
+        border-radius: 50%;
+        border: 1px solid rgba(103, 232, 249, 0.16);
+        box-shadow: 0 0 0 18px rgba(103, 232, 249, 0.025),
+                    0 0 0 36px rgba(103, 232, 249, 0.018);
+        pointer-events: none;
+      }
+
+      .trip-pulse-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .trip-pulse-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .trip-pulse-icon {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        flex: 0 0 38px;
+        border-radius: 11px;
+        background: rgba(16, 185, 129, 0.13);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: #6ee7b7;
+        font-size: 1rem;
+      }
+
+      .trip-pulse-title {
+        margin: 0;
+        color: #fff;
+        font-size: 0.98rem;
+        font-weight: 800;
+      }
+
+      .trip-pulse-subtitle {
+        margin-top: 3px;
+        color: var(--text-muted);
+        font-size: 0.7rem;
+      }
+
+      .trip-pulse-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.16);
+        color: #6ee7b7;
+        font-size: 0.65rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      .trip-pulse-live-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+      }
+
+      .trip-pulse-context {
+        padding: 9px 11px;
+        margin-bottom: 13px;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: #cbd5e1;
+        font-size: 0.72rem;
+      }
+
+      .trip-pulse-context strong {
+        color: #67e8f9;
+      }
+
+      .trip-pulse-label-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 6px;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+      }
+
+      .trip-pulse-energy {
+        color: #fff;
+        font-weight: 800;
+      }
+
+      .trip-pulse-range {
+        width: 100%;
+        height: 5px;
+        appearance: none;
+        -webkit-appearance: none;
+        border-radius: 999px;
+        outline: none;
+        cursor: pointer;
+        background: linear-gradient(90deg, #06b6d4 0%, #10b981 55%, #8b5cf6 100%);
+        margin: 4px 0 12px;
+      }
+
+      .trip-pulse-range::-webkit-slider-thumb {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 17px;
+        height: 17px;
+        border-radius: 50%;
+        border: 3px solid #07111f;
+        background: #67e8f9;
+        box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.2), 0 0 16px rgba(103, 232, 249, 0.3);
+        cursor: grab;
+      }
+
+      .trip-pulse-range::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 3px solid #07111f;
+        background: #67e8f9;
+        box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.2);
+        cursor: grab;
+      }
+
+      .trip-pulse-modes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
+        margin-bottom: 12px;
+      }
+
+      .trip-pulse-mode {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.025);
+        color: #cbd5e1;
+        border-radius: 9px;
+        padding: 7px 6px;
+        font: inherit;
+        font-size: 0.68rem;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .trip-pulse-mode:hover {
+        border-color: rgba(6, 182, 212, 0.38);
+        transform: translateY(-1px);
+      }
+
+      .trip-pulse-mode.active {
+        color: #fff;
+        border-color: rgba(16, 185, 129, 0.65);
+        background: rgba(16, 185, 129, 0.11);
+        box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.08);
+      }
+
+      .trip-pulse-result {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 11px;
+        border-radius: 10px;
+        background: rgba(16, 185, 129, 0.065);
+        border-left: 3px solid #10b981;
+      }
+
+      .trip-pulse-result-main {
+        min-width: 0;
+      }
+
+      .trip-pulse-result-title {
+        color: #a7f3d0;
+        font-size: 0.75rem;
+        font-weight: 800;
+      }
+
+      .trip-pulse-result-text {
+        color: #94a3b8;
+        font-size: 0.67rem;
+        line-height: 1.4;
+        margin-top: 2px;
+      }
+
+      .trip-pulse-score {
+        min-width: 48px;
+        text-align: center;
+        color: #67e8f9;
+        font-size: 1.05rem;
+        font-weight: 900;
+      }
+
+      .trip-pulse-score span {
+        display: block;
+        color: var(--text-dim);
+        font-size: 0.55rem;
+        letter-spacing: 0.05em;
+      }
+
+      @media (max-width: 900px) {
+        .trip-pulse-card {
+          min-height: auto;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .trip-pulse-head {
+          flex-direction: column;
+        }
+
+        .trip-pulse-live {
+          align-self: flex-start;
+        }
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="app-wrapper">
+      <!-- ==================== LEFT SIDEBAR ==================== -->
+      <aside class="sidebar" id="app-sidebar">
+        <div class="sidebar-header">
+          <div class="brand-icon">🧭</div>
+          <div class="brand-info">
+            <h1>WanderWise</h1>
+            <div class="brand-tagline">SMART TRAVEL PLATFORM</div>
+          </div>
+        </div>
+
+        <div class="sidebar-trip-pill">
+          <div class="trip-loc">
+            <span class="live-dot"></span>
+            <span id="sidebar-trip-name">Swat Valley</span>
+          </div>
+          <span
+            style="font-size: 0.72rem; color: var(--accent-cyan)"
+            id="sidebar-days-count"
+            >5 Days</span
+          >
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-section-title">Navigation</div>
+
+          <a
+            class="nav-item active"
+            data-view="view-home"
+            id="nav-home"
+            href="#"
+          >
+            <span class="icon">✨</span>
+            <span class="label">Trip Setup & Vibe</span>
+            <span class="badge">Planner</span>
+          </a>
+
+          <a
+            class="nav-item"
+            data-view="view-itinerary"
+            id="nav-itinerary"
+            href="#"
+          >
+            <span class="icon">⚡</span>
+            <span class="label">Smart Itinerary</span>
+            <span class="badge" id="sidebar-fatigue-badge">75% 🔋</span>
+          </a>
+
+          <a class="nav-item" data-view="view-budget" id="nav-budget" href="#">
+            <span class="icon">💸</span>
+            <span class="label">FairShare Budget</span>
+            <span class="badge">Debts</span>
+          </a>
+
+          <a class="nav-item" data-view="view-vault" id="nav-vault" href="#">
+            <span class="icon">🛡️</span>
+            <span class="label">Travel Vault & SOS</span>
+            <span class="badge">Offline</span>
+          </a>
+
+          <a class="nav-item" data-view="view-radar" id="nav-radar" href="#">
+            <span class="icon">🌦️</span>
+            <span class="label">Live Radar & Weather</span>
+            <span class="badge">Radar</span>
+          </a>
+
+          <div class="nav-section-title" style="margin-top: 10px">
+            Membership
+          </div>
+
+          <a
+            class="nav-item pro-item"
+            data-view="view-pro"
+            id="nav-pro"
+            href="#"
+          >
+            <span class="icon">👑</span>
+            <span class="label">WanderWise PRO</span>
+            <span class="badge" id="sidebar-pro-badge">UPGRADE</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-card">
+            <div class="user-avatar" id="sidebar-avatar">👨‍💻</div>
+            <div class="user-meta">
+              <div class="user-name" id="sidebar-user-name">Kamran Mohsin</div>
+              <div class="user-tier-badge" id="user-tier-label">
+                EXPLORER FREE
+              </div>
+            </div>
+            <button
+              class="btn-copy-acc"
+              id="quick-pro-btn"
+              title="Upgrade Plan"
+              style="padding: 4px 8px; font-size: 0.7rem"
+            >
+              PRO
+            </button>
+          </div>
+          <!-- Trip Countdown Widget -->
+          <div
+            id="sidebar-countdown"
+            style="
+              margin-top: 10px;
+              padding: 10px 14px;
+              background: rgba(16, 185, 129, 0.06);
+              border: 1px solid rgba(16, 185, 129, 0.15);
+              border-radius: 10px;
+              text-align: center;
+              display: none;
+            "
+          >
+            <div
+              style="
+                font-size: 0.68rem;
+                color: var(--text-dim);
+                margin-bottom: 3px;
+                letter-spacing: 0.05em;
+              "
+            >
+              TRIP COUNTDOWN
+            </div>
+            <div
+              style="font-size: 1.5rem; font-weight: 800; color: #6ee7b7"
+              id="countdown-days"
+            >
+              --
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-muted)">
+              days until departure 🚀
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Mobile Sidebar Overlay -->
+      <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+      <!-- ==================== MAIN CONTENT ==================== -->
+      <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <button
+              class="mobile-menu-btn"
+              id="mobile-toggle-btn"
+              aria-label="Toggle Navigation"
+            >
+              ☰
+            </button>
+            <div class="breadcrumb-area">
+              <h2 class="page-title" id="page-title-display">
+                Trip Setup & Vibe Quiz
+              </h2>
+              <div class="page-subtitle" id="page-subtitle-display">
+                Search any destination, pick dates, set your budget & travel
+                vibe
+              </div>
+            </div>
+          </div>
+
+          <div class="topbar-right">
+            <div
+              class="rain-mode-chip"
+              id="rain-mode-toggle"
+              title="Toggle Rain Mode"
+            >
+              <span class="rain-label">☔ Rain Mode</span>
+
+              <label class="toggle-switch">
+                <input type="checkbox" id="rain-mode-checkbox" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="currency-pill">
+              <button
+                class="currency-btn active"
+                data-currency="PKR"
+                id="curr-pkr"
+              >
+                PKR
+              </button>
+              <button class="currency-btn" data-currency="USD" id="curr-usd">
+                USD
+              </button>
+            </div>
+
+            <button class="btn-header-pro" id="header-upgrade-btn">
+              <span>👑 Upgrade PRO</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- View Container -->
+        <div class="view-container">
+          <!-- ==================== PAGE 1: TRIP SETUP & VIBE QUIZ ==================== -->
+          <section class="page-view active" id="view-home">
+            <div class="hero-split-grid">
+              <!-- Left column: Hero + AI Fund Calculator -->
+              <div class="hero-left-column">
+              <!-- Hero Card -->
+              <div class="hero-card anim-on-scroll">
+                <div class="hero-content">
+                  <div class="hero-pill-badge">PLAN • EXPLORE • ENJOY</div>
+                  <h1 class="hero-title">
+                    Smarter Trips,<br /><span>Happier Journeys.</span>
+                  </h1>
+                  <p class="hero-description">
+                    Welcome <strong>Kamran Mohsin</strong>! WanderWise helps you
+                    plan your dream journey with smart fatigue tracking, weather
+                    adaptation, fair group budgets, and offline emergency sheets
+                    — all in one dashboard.
+                  </p>
+
+                  <div class="hero-features-row">
+                    <div class="hero-feat-chip">
+                      <span class="feat-icon">⚡</span>
+                      <span>Smart Itinerary & Fatigue Engine</span>
+                    </div>
+                    <div class="hero-feat-chip">
+                      <span class="feat-icon">💸</span>
+                      <span>FairShare Group Debt Simplifier</span>
+                    </div>
+                    <div class="hero-feat-chip">
+                      <span class="feat-icon">🛡️</span>
+                      <span>Travel Vault & Offline SOS Sheet</span>
+                    </div>
+                  </div>
+
+                  <div class="hero-actions">
+                    <button class="btn-primary" id="btn-hero-explore">
+                      Start Your Adventure ➔
+                    </button>
+                    <button class="btn-outline" id="btn-hero-demo">
+                      How it Works? ℹ️
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+                <!-- AI Smart Fund Estimator Widget -->
+                <div
+                  class="ai-fund-box"
+                  id="ai-fund-estimator-box"
+                  style="
+                    margin-bottom: 18px;
+                    padding: 14px 16px;
+                    background: linear-gradient(
+                      135deg,
+                      rgba(6, 182, 212, 0.08),
+                      rgba(16, 185, 129, 0.08)
+                    );
+                    border: 1px solid rgba(6, 182, 212, 0.25);
+                    border-radius: 12px;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      margin-bottom: 8px;
+                      flex-wrap: wrap;
+                      gap: 6px;
+                    "
+                  >
+                    <div style="display: flex; align-items: center; gap: 8px">
+                      <span style="font-size: 1.25rem">✨</span>
+                      <strong style="color: #67e8f9; font-size: 0.88rem"
+                        >AI City-Based Fund & Route Calculator</strong
+                      >
+                    </div>
+                    <span
+                      class="badge"
+                      id="ai-fund-badge"
+                      style="
+                        background: rgba(16, 185, 129, 0.2);
+                        color: #6ee7b7;
+                        font-size: 0.72rem;
+                        padding: 3px 8px;
+                      "
+                      >AUTO-CALCULATED</span
+                    >
+                  </div>
+                  <div
+                    id="ai-fund-summary-text"
+                    style="
+                      font-size: 0.82rem;
+                      color: var(--text-dim);
+                      line-height: 1.5;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    Enter your departure city and destination to automatically
+                    calculate route distance, fuel, hotel stays, and recommended
+                    fund for 2 people!
+                  </div>
+                  <div
+                    id="ai-fund-breakdown-row"
+                    style="
+                      display: none;
+                      grid-template-columns: repeat(
+                        auto-fit,
+                        minmax(110px, 1fr)
+                      );
+                      gap: 8px;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    <div
+                      style="
+                        background: rgba(255, 255, 255, 0.04);
+                        padding: 8px;
+                        border-radius: 8px;
+                        text-align: center;
+                      "
+                    >
+                      <div style="font-size: 0.7rem; color: var(--text-muted)">
+                        Route Distance
+                      </div>
+                      <div
+                        id="ai-fund-dist"
+                        style="
+                          font-weight: 700;
+                          color: #fff;
+                          font-size: 0.88rem;
+                        "
+                      >
+                        ~245 km
+                      </div>
+                    </div>
+                    <div
+                      style="
+                        background: rgba(255, 255, 255, 0.04);
+                        padding: 8px;
+                        border-radius: 8px;
+                        text-align: center;
+                      "
+                    >
+                      <div style="font-size: 0.7rem; color: var(--text-muted)">
+                        Transport/Fuel
+                      </div>
+                      <div
+                        id="ai-fund-fuel"
+                        style="
+                          font-weight: 700;
+                          color: #67e8f9;
+                          font-size: 0.88rem;
+                        "
+                      >
+                        Rs 7,500
+                      </div>
+                    </div>
+                    <div
+                      style="
+                        background: rgba(255, 255, 255, 0.04);
+                        padding: 8px;
+                        border-radius: 8px;
+                        text-align: center;
+                      "
+                    >
+                      <div style="font-size: 0.7rem; color: var(--text-muted)">
+                        Stay / Hotel
+                      </div>
+                      <div
+                        id="ai-fund-hotel"
+                        style="
+                          font-weight: 700;
+                          color: #a78bfa;
+                          font-size: 0.88rem;
+                        "
+                      >
+                        Rs 9,500
+                      </div>
+                    </div>
+                    <div
+                      style="
+                        background: rgba(255, 255, 255, 0.04);
+                        padding: 8px;
+                        border-radius: 8px;
+                        text-align: center;
+                      "
+                    >
+                      <div style="font-size: 0.7rem; color: var(--text-muted)">
+                        Food & Chai
+                      </div>
+                      <div
+                        id="ai-fund-food"
+                        style="
+                          font-weight: 700;
+                          color: #f59e0b;
+                          font-size: 0.88rem;
+                        "
+                      >
+                        Rs 5,500
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      gap: 8px;
+                      align-items: center;
+                      flex-wrap: wrap;
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="btn-primary"
+                      id="btn-apply-ai-fund"
+                      style="
+                        padding: 6px 14px;
+                        font-size: 0.78rem;
+                        display: none;
+                      "
+                    >
+                      ✨ Apply AI Fund (Rs 25,000)
+                    </button>
+                    <div
+                      id="ai-fund-validation-note"
+                      style="font-size: 0.75rem; color: #6ee7b7"
+                    ></div>
+
+                  </div>
+                </div>
+
+                <!-- =====================================================
+                     NEW: TRIP PULSE — Interactive Travel Energy Companion
+                     ===================================================== -->
+                <div class="trip-pulse-card anim-on-scroll" id="trip-pulse-card">
+                  <div class="trip-pulse-head">
+                    <div class="trip-pulse-title-wrap">
+                      <div class="trip-pulse-icon">⚡</div>
+                      <div>
+                        <h3 class="trip-pulse-title">Trip Pulse</h3>
+                        <div class="trip-pulse-subtitle">
+                          Tell WanderWise how you feel — get your ideal pace instantly.
+                        </div>
+                      </div>
+                    </div>
+                    <div class="trip-pulse-live">
+                      <span class="trip-pulse-live-dot"></span>
+                      LIVE ADAPTIVE
+                    </div>
+                  </div>
+
+                  <div class="trip-pulse-context" id="trip-pulse-context">
+                    Planning for <strong id="trip-pulse-destination">your destination</strong>
+                    • your pace will adapt to your energy.
+                  </div>
+
+                  <div class="trip-pulse-label-row">
+                    <span>Today's travel energy</span>
+                    <span class="trip-pulse-energy" id="trip-pulse-energy-label">75% Energetic</span>
+                  </div>
+
+                  <input
+                    class="trip-pulse-range"
+                    id="trip-pulse-energy"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="75"
+                    aria-label="Travel energy level"
+                  />
+
+                  <div class="trip-pulse-modes" id="trip-pulse-modes">
+                    <button type="button" class="trip-pulse-mode active" data-pulse-mode="adventure">
+                      🧗 Adventure
+                    </button>
+                    <button type="button" class="trip-pulse-mode" data-pulse-mode="scenic">
+                      📸 Scenic
+                    </button>
+                    <button type="button" class="trip-pulse-mode" data-pulse-mode="relax">
+                      ☕ Relax
+                    </button>
+                  </div>
+
+                  <div class="trip-pulse-result">
+                    <div class="trip-pulse-result-main">
+                      <div class="trip-pulse-result-title" id="trip-pulse-result-title">
+                        Adventure Ready
+                      </div>
+                      <div class="trip-pulse-result-text" id="trip-pulse-result-text">
+                        High-energy activities can fit your current pace. Keep a recovery gap after major activity.
+                      </div>
+                    </div>
+                    <div class="trip-pulse-score">
+                      <span>PACE</span>
+                      <strong id="trip-pulse-score">82</strong>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Trip Setup Card -->
+              <div class="quiz-panel-card anim-on-scroll">
+                <div class="quiz-header">
+                  <h2>Trip Setup & Vibe Quiz</h2>
+                  <div class="quiz-steps-stepper">
+                    <div class="step-bubble active">1</div>
+                    <div class="step-bubble active">2</div>
+                    <div class="step-bubble active">3</div>
+                    <div class="step-bubble">4</div>
+                    <div class="step-bubble">5</div>
+                  </div>
+                </div>
+
+                <!-- Organizer Name -->
+                <div class="form-group" style="position: relative">
+                  <label class="form-label" for="input-user-name">
+                    👤 Your Name (Trip Organizer)
+                    <span style="color: #fda4af">*</span>
+                  </label>
+                  <div class="dest-search-wrap">
+                    <span class="dest-search-icon">👤</span>
+                    <input
+                      type="text"
+                      class="dest-search-input-box"
+                      id="input-user-name"
+                      placeholder="Enter your name"
+                      value=""
+                      autocomplete="name"
+                    />
+                  </div>
+                </div>
+
+                <!-- Departure Location (Starting City) -->
+                <div class="form-group" style="position: relative">
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      margin-bottom: 6px;
+                      flex-wrap: wrap;
+                      gap: 8px;
+                    "
+                  >
+                    <label
+                      class="form-label"
+                      for="input-departure-city"
+                      style="margin-bottom: 0"
+                    >
+                      🚩 Where are you starting from? (Current Location /
+                      Departure City) <span style="color: #fda4af">*</span>
+                    </label>
+                    <button
+                      type="button"
+                      class="btn-copy-acc"
+                      id="btn-auto-detect-location"
+                      style="
+                        padding: 4px 10px;
+                        font-size: 0.72rem;
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+                        border-color: rgba(6, 182, 212, 0.4);
+                        color: #67e8f9;
+                      "
+                    >
+                      <span>📡 Auto-Detect My City</span>
+                    </button>
+                  </div>
+                  <div class="dest-search-wrap">
+                    <span class="dest-search-icon">🚩</span>
+                    <input
+                      type="text"
+                      class="dest-search-input-box"
+                      id="input-departure-city"
+                      placeholder="Enter your current city"
+                      value=""
+                      autocomplete="off"
+                    />
+                    <span
+                      class="badge"
+                      id="detected-loc-badge"
+                      style="
+                        position: absolute;
+                        right: 12px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: rgba(16, 185, 129, 0.2);
+                        color: #6ee7b7;
+                        font-size: 0.72rem;
+                        display: none;
+                        padding: 3px 8px;
+                        border-radius: 4px;
+                      "
+                      >✓ Detected</span
+                    >
+                  </div>
+
+                  <div class="quick-dest-pills-row" id="quick-origin-pills">
+                    <span
+                      style="
+                        font-size: 0.72rem;
+                        color: var(--text-dim);
+                        margin-right: 4px;
+                      "
+                      >Major Hubs:</span
+                    >
+                    <span
+                      class="quick-dest-pill quick-origin-pill"
+                      data-city="Islamabad, Pakistan"
+                      >📍 Islamabad</span
+                    >
+                    <span
+                      class="quick-dest-pill quick-origin-pill"
+                      data-city="Lahore, Pakistan"
+                      >📍 Lahore</span
+                    >
+                    <span
+                      class="quick-dest-pill quick-origin-pill"
+                      data-city="Karachi, Pakistan"
+                      >📍 Karachi</span
+                    >
+                    <span
+                      class="quick-dest-pill quick-origin-pill"
+                      data-city="Peshawar, Pakistan"
+                      >📍 Peshawar</span
+                    >
+                    <span
+                      class="quick-dest-pill quick-origin-pill"
+                      data-city="Rawalpindi, Pakistan"
+                      >📍 Rawalpindi</span
+                    >
+                    <span
+                      class="quick-dest-pill quick-origin-pill"
+                      data-city="Faisalabad, Pakistan"
+                      >📍 Faisalabad</span
+                    >
+                  </div>
+                </div>
+
+                <!-- Destination Search -->
+                <div class="form-group" style="position: relative">
+                  <label class="form-label" for="dest-search-input">
+                    🔍 Where are you going? (Search or type any destination)
+                  </label>
+
+                  <div class="dest-search-wrap">
+                    <span class="dest-search-icon">📍</span>
+                    <input
+                      type="text"
+                      class="dest-search-input-box"
+                      id="dest-search-input"
+                      placeholder="Search any city or valley"
+                      value=""
+                      autocomplete="off"
+                    />
+                    <button
+                      class="dest-clear-btn"
+                      id="btn-clear-dest"
+                      aria-label="Clear Destination"
+                    >
+                      ✕
+                    </button>
+
+                    <div
+                      class="dest-results-dropdown"
+                      id="dest-dropdown-results"
+                    >
+                      <!-- Populated dynamically via JS -->
+                    </div>
+                  </div>
+
+                  <div class="quick-dest-pills-row" id="quick-dest-pills">
+                    <span
+                      style="
+                        font-size: 0.72rem;
+                        color: var(--text-dim);
+                        margin-right: 4px;
+                      "
+                      >Quick Picks:</span
+                    >
+                    <span
+                      class="quick-dest-pill"
+                      data-dest="Swat Valley, Pakistan"
+                      >🏔️ Swat</span
+                    >
+                    <span
+                      class="quick-dest-pill"
+                      data-dest="Hunza Valley, Gilgit-Baltistan"
+                      >🌄 Hunza</span
+                    >
+                    <span
+                      class="quick-dest-pill"
+                      data-dest="Skardu & Deosai Plains"
+                      >🏜️ Skardu</span
+                    >
+                    <span
+                      class="quick-dest-pill"
+                      data-dest="Kumrat Valley & Jahaz Banda"
+                      >🌲 Kumrat</span
+                    >
+                    <span
+                      class="quick-dest-pill"
+                      data-dest="Murree & Galiyat Foothills"
+                      >☕ Murree</span
+                    >
+                    <span
+                      class="quick-dest-pill"
+                      data-dest="Antalya & Cappadocia"
+                      >🎈 Antalya</span
+                    >
+                    <span
+                      class="quick-dest-pill"
+                      data-dest="Bali & Ubud Rainforest"
+                      >🌴 Bali</span
+                    >
+                  </div>
+                </div>
+
+                <!-- Date Picker Row -->
+                <div class="form-group">
+                  <label class="form-label">📅 Trip Dates</label>
+                  <div class="date-grid">
+                    <div>
+                      <div
+                        style="
+                          font-size: 0.72rem;
+                          color: var(--text-dim);
+                          margin-bottom: 4px;
+                        "
+                      >
+                        Start Date
+                      </div>
+                      <input
+                        type="date"
+                        class="input-box"
+                        id="input-start-date"
+                        value="2025-09-12"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        style="
+                          font-size: 0.72rem;
+                          color: var(--text-dim);
+                          margin-bottom: 4px;
+                        "
+                      >
+                        End Date
+                      </div>
+                      <input
+                        type="date"
+                        class="input-box"
+                        id="input-end-date"
+                        value="2025-09-16"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Travelers & Budget -->
+                <div class="date-grid" style="margin-bottom: 18px">
+                  <div class="form-group" style="margin-bottom: 0">
+                    <label class="form-label">👥 Travelers</label>
+                    <select class="input-box" id="input-travelers">
+                      <option value="1">1 Solo Explorer</option>
+                      <option value="2" selected>2 Friends / Couple</option>
+                      <option value="4">4 Squad Members</option>
+                      <option value="6">6 Group Voyagers</option>
+                      <option value="8">8 Big Expedition</option>
+                      <option value="12">12 Large Caravan</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0">
+                    <label class="form-label"
+                      >💰 Total Budget (<span class="currency-symbol-label"
+                        >Rs</span
+                      >)</label
+                    >
+                    <input
+                      type="number"
+                      class="input-box"
+                      id="input-budget"
+                      value="25000"
+                      step="1000"
+                      min="1000"
+                    />
+                  </div>
+                </div>
+
+                <!-- Vibe Quiz Selector -->
+                <div class="form-group">
+                  <label class="form-label">🎭 Select Your Travel Vibe</label>
+                  <div class="vibe-grid" id="vibe-cards-container">
+                    <!-- Injected via JS -->
+                  </div>
+                </div>
+
+                <!-- Vibe Dynamic Summary -->
+                <div class="vibe-summary-box" id="vibe-feedback-box">
+                  <span>💡</span>
+                  <span id="vibe-feedback-text"
+                    >Chill Vibe: Gentle pacing with 60-min relaxation buffers
+                    between scenic spots.</span
+                  >
+                </div>
+
+                <div style="margin-top: 22px">
+                  <button
+                    class="btn-primary"
+                    style="width: 100%"
+                    id="btn-save-quiz-next"
+                  >
+                    ✅ Confirm & Proceed to Smart Itinerary ➔
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats Row Below Hero -->
+            <div class="home-stats-row anim-on-scroll" style="margin-top: 32px">
+              <div class="home-stat-card">
+                <div class="home-stat-icon">🌍</div>
+                <div class="home-stat-val">10+</div>
+                <div class="home-stat-label">Destinations Ready</div>
+              </div>
+              <div class="home-stat-card">
+                <div class="home-stat-icon">⚡</div>
+                <div class="home-stat-val">Real-Time</div>
+                <div class="home-stat-label">Fatigue Tracking</div>
+              </div>
+              <div class="home-stat-card">
+                <div class="home-stat-icon">💸</div>
+                <div class="home-stat-val">Auto</div>
+                <div class="home-stat-label">Debt Minimizer</div>
+              </div>
+              <div class="home-stat-card">
+                <div class="home-stat-icon">🛡️</div>
+                <div class="home-stat-val">Offline</div>
+                <div class="home-stat-label">SOS Emergency Sheet</div>
+              </div>
+            </div>
+
+            <!-- Trip Readiness Score Card -->
+            <div
+              class="trip-readiness-card anim-on-scroll"
+              id="trip-readiness-card"
+              style="
+                margin-top: 28px;
+                padding: 24px;
+                background: linear-gradient(
+                  135deg,
+                  rgba(16, 185, 129, 0.08),
+                  rgba(99, 102, 241, 0.06)
+                );
+                border: 1px solid rgba(16, 185, 129, 0.2);
+                border-radius: 16px;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 18px;
+                  flex-wrap: wrap;
+                  gap: 10px;
+                "
+              >
+                <div>
+                  <h3
+                    style="
+                      font-size: 1.05rem;
+                      font-weight: 700;
+                      color: #fff;
+                      margin-bottom: 4px;
+                    "
+                  >
+                    🎯 Trip Readiness Score
+                  </h3>
+                  <div style="font-size: 0.78rem; color: var(--text-muted)">
+                    Complete your setup to maximize your trip!
+                  </div>
+                </div>
+                <div style="text-align: center">
+                  <div
+                    style="font-size: 2rem; font-weight: 900; color: #6ee7b7"
+                    id="readiness-score-val"
+                  >
+                    0%
+                  </div>
+                  <div style="font-size: 0.7rem; color: var(--text-dim)">
+                    READINESS
+                  </div>
+                </div>
+              </div>
+              <div
+                style="
+                  height: 8px;
+                  background: rgba(255, 255, 255, 0.06);
+                  border-radius: 4px;
+                  margin-bottom: 18px;
+                  overflow: hidden;
+                "
+              >
+                <div
+                  id="readiness-bar-fill"
+                  style="
+                    height: 100%;
+                    width: 0%;
+                    background: linear-gradient(90deg, #10b981, #6366f1);
+                    border-radius: 4px;
+                    transition: width 0.8s ease;
+                  "
+                ></div>
+              </div>
+              <div
+                id="readiness-checklist"
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                  gap: 10px;
+                "
+              ></div>
+            </div>
+          </section>
+
+          <!-- ==================== PAGE 2: SMART ITINERARY ==================== -->
+          <section class="page-view" id="view-itinerary">
+            <!-- Summary Banner -->
+            <div class="trip-summary-banner anim-on-scroll">
+              <div class="trip-meta-item">
+                <div class="meta-icon-bubble">📍</div>
+                <div class="meta-labels">
+                  <span>Starting City</span>
+                  <strong id="banner-departure-text">Not Set</strong>
+                </div>
+              </div>
+              <div class="trip-meta-item">
+                <div class="meta-icon-bubble">📍</div>
+                <div class="meta-labels">
+                  <span>Destination</span>
+                  <strong id="banner-dest-text">Swat Valley, Pakistan</strong>
+                </div>
+              </div>
+
+              <div class="trip-meta-item">
+                <div class="meta-icon-bubble">📅</div>
+                <div class="meta-labels">
+                  <span>Trip Dates</span>
+                  <strong id="banner-dates-text">12 Sep - 16 Sep 2025</strong>
+                </div>
+              </div>
+
+              <div class="trip-meta-item">
+                <div class="meta-icon-bubble" id="banner-vibe-icon">🌿</div>
+                <div class="meta-labels">
+                  <span>Travel Vibe</span>
+                  <strong id="banner-vibe-text">Chill</strong>
+                </div>
+              </div>
+
+              <div class="trip-meta-item">
+                <div class="meta-icon-bubble">🌦️</div>
+                <div class="meta-labels">
+                  <span>Weather Now</span>
+                  <strong id="banner-weather-text">22°C • Light Rain</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rain Mode Alert -->
+            <div class="rain-mode-banner" id="rain-mode-alert">
+              <div class="rain-mode-info">
+                <span style="font-size: 1.5rem">☔</span>
+                <div>
+                  <strong>Rain Mode is ON:</strong>
+                  <span>
+                    Outdoor activities auto-swapped with sheltered indoor
+                    alternatives.</span
+                  >
+                </div>
+              </div>
+              <button
+                class="btn-outline"
+                style="padding: 6px 14px; font-size: 0.78rem"
+                id="btn-turn-off-rain"
+              >
+                Revert to Outdoor
+              </button>
+            </div>
+
+            <!-- Days Navigation -->
+            <div class="days-pills-row" id="days-tabs-container">
+              <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Main Itinerary Grid -->
+            <div class="itinerary-main-grid anim-on-scroll">
+              <!-- Timeline Schedule -->
+              <div class="timeline-card">
+                <div class="timeline-card-header">
+                  <div>
+                    <h3 id="current-day-heading">Day 1 — 12 Sep (Fri)</h3>
+                    <div
+                      style="font-size: 0.8rem; color: var(--text-muted)"
+                      id="current-day-subheading"
+                    >
+                      Arrival & Local Heritage
+                    </div>
+                  </div>
+                  <button
+                    class="btn-outline"
+                    id="btn-add-activity-modal"
+                    style="font-size: 0.8rem; padding: 7px 14px"
+                  >
+                    + Add Activity
+                  </button>
+                </div>
+
+                <div class="activities-list" id="activities-list-container">
+                  <!-- Activities rendered via JS -->
+                </div>
+              </div>
+
+              <!-- Fatigue Engine & Rain Alternatives -->
+              <div class="itinerary-side-col">
+                <!-- Fatigue Gauge -->
+                <div class="fatigue-card anim-on-scroll">
+                  <div class="fatigue-card-header">
+                    <h4
+                      style="font-size: 1rem; font-weight: 700; color: #ffffff"
+                    >
+                      🔋 Real-Time Fatigue Engine
+                    </h4>
+                    <span
+                      style="
+                        font-size: 0.72rem;
+                        color: var(--text-muted);
+                        background: rgba(255, 255, 255, 0.06);
+                        padding: 3px 8px;
+                        border-radius: 4px;
+                      "
+                      >Dynamic Pace</span
+                    >
+                  </div>
+
+                  <div class="fatigue-visual-box">
+                    <div
+                      class="fatigue-radial-circle"
+                      id="fatigue-gauge-circle"
+                    >
+                      <span class="fatigue-val" id="fatigue-percentage-val"
+                        >75%</span
+                      >
+                    </div>
+                    <div class="fatigue-status-text">
+                      <h4 id="fatigue-status-title">Good Pace!</h4>
+                      <p id="fatigue-status-desc">
+                        You're doing great! Keep recommended rest breaks.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="energy-bar-track">
+                    <div
+                      class="energy-bar-fill"
+                      id="fatigue-bar-fill"
+                      style="width: 75%"
+                    ></div>
+                  </div>
+
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      font-size: 0.75rem;
+                      color: var(--text-dim);
+                      margin-top: 6px;
+                    "
+                  >
+                    <span>Rest Gap: <strong>45 min</strong></span>
+                    <span
+                      >Physical Load:
+                      <strong id="fatigue-load-label">Low-Medium</strong></span
+                    >
+                  </div>
+                </div>
+
+                <!-- Rain Mode Alternatives -->
+                <div class="rain-alt-card anim-on-scroll">
+                  <div class="rain-alt-header">
+                    <h4>Rain Mode Alternatives</h4>
+                    <span
+                      style="font-size: 0.75rem; color: var(--accent-cyan)"
+                      id="rain-alt-count"
+                      >3 Available</span
+                    >
+                  </div>
+
+                  <div id="rain-alternatives-container">
+                    <!-- Injected via JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Extended: Terrain & Photography & Journal -->
+            <div class="itinerary-extended-grid anim-on-scroll">
+              <!-- Route Elevation -->
+              <div class="timeline-card">
+                <div class="card-title-bar">
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <span style="font-size: 1.3rem">📈</span>
+                    <div>
+                      <h3 id="terrain-section-title">
+                        Route Elevation & Altitude Profile
+                      </h3>
+                      <span style="font-size: 0.75rem; color: var(--text-muted)"
+                        >Pacing and altitude data for today's route</span
+                      >
+                    </div>
+                  </div>
+                  <span
+                    class="badge"
+                    style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7"
+                    id="altitude-badge"
+                    >3,250 ft → 9,400 ft</span
+                  >
+                </div>
+
+                <div
+                  style="
+                    background: rgba(255, 255, 255, 0.02);
+                    border: 1px solid var(--border-subtle);
+                    border-radius: var(--radius-md);
+                    padding: 18px;
+                    margin-bottom: 16px;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      font-size: 0.75rem;
+                      color: var(--text-muted);
+                      margin-bottom: 8px;
+                    "
+                  >
+                    <span>Base Valley</span>
+                    <span>Mid Ridge Viewpoint</span>
+                    <span>Peak Pass</span>
+                  </div>
+                  <div
+                    style="
+                      height: 12px;
+                      background: rgba(255, 255, 255, 0.06);
+                      border-radius: var(--radius-full);
+                      overflow: hidden;
+                    "
+                  >
+                    <div
+                      id="elevation-fill-bar"
+                      style="
+                        height: 100%;
+                        width: 72%;
+                        background: linear-gradient(
+                          90deg,
+                          #10b981 0%,
+                          #06b6d4 50%,
+                          #f59e0b 100%
+                        );
+                        border-radius: var(--radius-full);
+                        transition: width 1s ease;
+                      "
+                    ></div>
+                  </div>
+                  <div
+                    style="
+                      display: grid;
+                      grid-template-columns: repeat(3, 1fr);
+                      gap: 10px;
+                      margin-top: 14px;
+                      text-align: center;
+                    "
+                  >
+                    <div
+                      style="
+                        background: rgba(255, 255, 255, 0.03);
+                        padding: 8px;
+                        border-radius: var(--radius-sm);
+                      "
+                    >
+                      <span
+                        style="
+                          font-size: 0.7rem;
+                          color: var(--text-muted);
+                          display: block;
+                        "
+                        >Oxygen Index</span
+                      >
+                      <strong
+                        style="color: #6ee7b7; font-size: 0.85rem"
+                        id="oxygen-stat-val"
+                        >91% Good</strong
+                      >
+                    </div>
+                    <div
+                      style="
+                        background: rgba(255, 255, 255, 0.03);
+                        padding: 8px;
+                        border-radius: var(--radius-sm);
+                      "
+                    >
+                      <span
+                        style="
+                          font-size: 0.7rem;
+                          color: var(--text-muted);
+                          display: block;
+                        "
+                        >Trek Distance</span
+                      >
+                      <strong
+                        style="color: #67e8f9; font-size: 0.85rem"
+                        id="distance-stat-val"
+                        >4.8 km</strong
+                      >
+                    </div>
+                    <div
+                      style="
+                        background: rgba(255, 255, 255, 0.03);
+                        padding: 8px;
+                        border-radius: var(--radius-sm);
+                      "
+                    >
+                      <span
+                        style="
+                          font-size: 0.7rem;
+                          color: var(--text-muted);
+                          display: block;
+                        "
+                        >UV Intensity</span
+                      >
+                      <strong
+                        style="color: #fcd34d; font-size: 0.85rem"
+                        id="uv-stat-val"
+                        >Moderate (SPF 50)</strong
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Photography Hotspots -->
+                <h4
+                  style="
+                    font-size: 0.95rem;
+                    font-weight: 700;
+                    margin-bottom: 10px;
+                    color: #ffffff;
+                  "
+                >
+                  📸 Scenic Photography Hotspots
+                </h4>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+                    gap: 10px;
+                  "
+                >
+                  <div
+                    style="
+                      background: rgba(255, 255, 255, 0.02);
+                      border: 1px solid var(--border-subtle);
+                      padding: 12px;
+                      border-radius: var(--radius-md);
+                    "
+                  >
+                    <strong
+                      style="font-size: 0.82rem; color: #ffffff; display: block"
+                      >🌅 Golden Hour Point</strong
+                    >
+                    <span style="font-size: 0.72rem; color: var(--text-muted)"
+                      >Best 05:45 PM – 06:20 PM for reflection shots.</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      background: rgba(255, 255, 255, 0.02);
+                      border: 1px solid var(--border-subtle);
+                      padding: 12px;
+                      border-radius: var(--radius-md);
+                    "
+                  >
+                    <strong
+                      style="font-size: 0.82rem; color: #ffffff; display: block"
+                      >🌲 Glacial Stream Bend</strong
+                    >
+                    <span style="font-size: 0.72rem; color: var(--text-muted)"
+                      >Crystal turquoise water with snow backdrop.</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      background: rgba(255, 255, 255, 0.02);
+                      border: 1px solid var(--border-subtle);
+                      padding: 12px;
+                      border-radius: var(--radius-md);
+                    "
+                  >
+                    <strong
+                      style="font-size: 0.82rem; color: #ffffff; display: block"
+                      >🏔️ Ridge Silhouette</strong
+                    >
+                    <span style="font-size: 0.72rem; color: var(--text-muted)"
+                      >Best at sunrise with fog layer below peaks.</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      background: rgba(255, 255, 255, 0.02);
+                      border: 1px solid var(--border-subtle);
+                      padding: 12px;
+                      border-radius: var(--radius-md);
+                    "
+                  >
+                    <strong
+                      style="font-size: 0.82rem; color: #ffffff; display: block"
+                      >🌌 Stargazing Spot</strong
+                    >
+                    <span style="font-size: 0.72rem; color: var(--text-muted)"
+                      >Zero light pollution, Milky Way clearly visible.</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Day Journal -->
+              <div class="timeline-card">
+                <div class="card-title-bar">
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <span style="font-size: 1.3rem">📝</span>
+                    <div>
+                      <h3>Day Notes & Reminders</h3>
+                      <span style="font-size: 0.75rem; color: var(--text-muted)"
+                        >Personal travel journal for Kamran Mohsin</span
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <textarea
+                    class="input-box"
+                    id="daily-journal-notes"
+                    rows="6"
+                    placeholder="Write reminders, local guide phone numbers, or scenic cafe names for this day..."
+                    style="
+                      resize: vertical;
+                      line-height: 1.5;
+                      font-size: 0.85rem;
+                    "
+                  ></textarea>
+                </div>
+
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <span
+                    style="font-size: 0.72rem; color: var(--text-dim)"
+                    id="journal-save-status"
+                    >Auto-saved to offline vault</span
+                  >
+                  <button
+                    class="btn-primary"
+                    id="btn-save-journal"
+                    style="font-size: 0.78rem; padding: 6px 14px"
+                  >
+                    Save Notes
+                  </button>
+                </div>
+
+                <div
+                  style="
+                    margin-top: 18px;
+                    padding: 12px;
+                    background: rgba(16, 185, 129, 0.06);
+                    border-left: 3px solid var(--primary-emerald);
+                    border-radius: var(--radius-sm);
+                    font-size: 0.78rem;
+                    color: #a7f3d0;
+                  "
+                >
+                  🎒 <strong>Day Packing Priority:</strong> Waterproof jacket,
+                  power bank, hiking boots & cash for local checkposts.
+                </div>
+
+                <!-- Quick Tips -->
+                <div
+                  style="
+                    margin-top: 14px;
+                    padding: 12px;
+                    background: rgba(6, 182, 212, 0.06);
+                    border-left: 3px solid var(--accent-cyan);
+                    border-radius: var(--radius-sm);
+                    font-size: 0.78rem;
+                    color: #bae6fd;
+                  "
+                >
+                  💡 <strong>Pro Tip:</strong> Carry offline maps downloaded
+                  before leaving. Mobile signals are weak in mountain valleys.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================== PAGE 3: FAIRSHARE BUDGET ==================== -->
+          <section class="page-view" id="view-budget">
+            <!-- Top 4 Metrics -->
+            <div class="budget-stats-grid anim-on-scroll">
+              <div class="stat-metric-card">
+                <span class="stat-icon">💰</span>
+                <div
+                  style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                  "
+                >
+                  <div class="stat-title">Total Trip Budget</div>
+                  <button
+                    class="btn-copy-acc"
+                    id="btn-quick-edit-budget"
+                    style="
+                      font-size: 0.72rem;
+                      padding: 2px 8px;
+                      border-radius: 4px;
+                    "
+                  >
+                    ✏️ Edit
+                  </button>
+                </div>
+                <div class="stat-number" id="stat-total-budget">Rs 25,000</div>
+                <div class="stat-subtext">Your group trip allowance</div>
+                <div
+                  style="
+                    height: 4px;
+                    background: rgba(255, 255, 255, 0.06);
+                    border-radius: 2px;
+                    margin-top: 10px;
+                    overflow: hidden;
+                  "
+                >
+                  <div
+                    id="spent-progress-bar"
+                    style="
+                      height: 100%;
+                      width: 0%;
+                      background: var(--grad-emerald);
+                      transition: width 1s ease;
+                      border-radius: 2px;
+                    "
+                  ></div>
+                </div>
+              </div>
+
+              <div class="stat-metric-card">
+                <span class="stat-icon">💳</span>
+                <div class="stat-title">Total Spent So Far</div>
+                <div
+                  class="stat-number"
+                  id="stat-total-spent"
+                  style="color: #67e8f9"
+                >
+                  Rs 0
+                </div>
+                <div class="stat-subtext" id="stat-spent-percent">
+                  0% of budget consumed
+                </div>
+              </div>
+
+              <div class="stat-metric-card">
+                <span class="stat-icon">🏦</span>
+                <div class="stat-title">Remaining Funds</div>
+                <div
+                  class="stat-number"
+                  id="stat-remaining"
+                  style="color: #6ee7b7"
+                >
+                  Rs 25,000
+                </div>
+                <div class="stat-subtext">Safe financial buffer</div>
+              </div>
+
+              <div class="stat-metric-card">
+                <span class="stat-icon">⚖️</span>
+                <div class="stat-title">Fair Share / Person</div>
+                <div class="stat-number" id="stat-fair-share">Rs 12,500</div>
+                <div class="stat-subtext" id="stat-members-count-label">
+                  Based on 2 travelers
+                </div>
+              </div>
+            </div>
+
+            <!-- Group Members & Debt Minimizer -->
+            <div class="fairshare-grid anim-on-scroll">
+              <!-- Group Members -->
+              <div class="group-members-card">
+                <div class="card-title-bar">
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <span style="font-size: 1.25rem">👥</span>
+                    <h3 id="group-members-heading">Group Members</h3>
+                  </div>
+                  <button
+                    class="btn-primary"
+                    id="btn-open-add-member-modal"
+                    style="font-size: 0.78rem; padding: 6px 14px"
+                  >
+                    + Add Member
+                  </button>
+                </div>
+
+                <div class="member-list" id="members-list-container">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+
+              <!-- Smart Debt Minimization -->
+              <div class="debt-minimizer-card">
+                <div class="card-title-bar">
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <span style="font-size: 1.4rem">⚡</span>
+                    <h3>Smart Debt Minimization</h3>
+                  </div>
+                  <span
+                    class="badge"
+                    style="
+                      background: rgba(16, 185, 129, 0.15);
+                      color: #6ee7b7;
+                      font-size: 0.72rem;
+                      padding: 3px 8px;
+                      border-radius: 4px;
+                    "
+                    >ALGORITHM ACTIVE</span
+                  >
+                </div>
+
+                <div class="algorithm-banner">
+                  <div class="algo-text">
+                    <h4>Optimized Group Settlement</h4>
+                    <p>
+                      Our algorithm minimized cross-debts into fewest direct
+                      transfers possible.
+                    </p>
+                  </div>
+                  <div style="text-align: right">
+                    <div
+                      style="
+                        font-size: 1.5rem;
+                        font-weight: 800;
+                        color: #ffffff;
+                      "
+                      id="settlement-count-display"
+                    >
+                      2
+                    </div>
+                    <div style="font-size: 0.7rem; color: var(--text-muted)">
+                      Transfers Needed
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="settlement-transfers-list"
+                  id="settlements-container"
+                >
+                  <!-- Rendered by DebtMinimizer engine -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Expenses Table -->
+            <div class="expenses-table-card anim-on-scroll">
+              <div class="card-title-bar">
+                <div>
+                  <h3>Recent Trip Expenses</h3>
+                  <span style="font-size: 0.78rem; color: var(--text-muted)"
+                    >Record shared costs, stays, jeeps, and food</span
+                  >
+                </div>
+                <button
+                  class="btn-primary"
+                  id="btn-open-expense-modal"
+                  style="padding: 9px 18px; font-size: 0.85rem"
+                >
+                  + Add Expense
+                </button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="expenses-table">
+                  <thead>
+                    <tr>
+                      <th>Expense Title</th>
+                      <th>Category</th>
+                      <th>Paid By</th>
+                      <th>Date</th>
+                      <th style="text-align: right">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody id="expenses-table-body">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================== PAGE 4: TRAVEL VAULT ==================== -->
+          <section class="page-view" id="view-vault">
+            <!-- Vault Tabs -->
+            <div class="vault-tabs-row anim-on-scroll">
+              <button class="vault-tab-btn active" id="tab-vault-checklist">
+                <span>🎒</span> Interactive Packing Checklist
+              </button>
+              <button class="vault-tab-btn" id="tab-vault-emergency">
+                <span>🚨</span> Offline Emergency One-Sheet
+              </button>
+            </div>
+
+            <!-- Packing Checklist -->
+            <div id="vault-checklist-pane">
+              <div class="checklist-view-grid">
+                <div
+                  class="checklist-left-panel"
+                  id="checklist-categories-container"
+                >
+                  <!-- Rendered dynamically -->
+                </div>
+
+                <div>
+                  <div class="gear-showcase-card anim-on-scroll">
+                    <img
+                      src="assets/packing_gear.jpg"
+                      alt="Travel Gear Flatlay"
+                      class="gear-img-box"
+                    />
+                    <div class="gear-body">
+                      <h4>Pre-Trip Readiness</h4>
+                      <p style="font-size: 0.82rem; color: var(--text-muted)">
+                        All items stored offline in your browser. Pack ahead to
+                        prevent last-minute mountain delays.
+                      </p>
+
+                      <div class="gear-progress-wrap">
+                        <div class="gear-progress-info">
+                          <span>Checklist Completion</span>
+                          <strong id="checklist-progress-text"
+                            >13 of 17 Packed</strong
+                          >
+                        </div>
+                        <div class="gear-bar-track">
+                          <div
+                            class="gear-bar-fill"
+                            id="checklist-progress-bar"
+                            style="width: 76%"
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div style="display: flex; gap: 10px; margin-top: 10px">
+                        <button
+                          class="btn-outline"
+                          style="flex: 1; font-size: 0.8rem"
+                          id="btn-check-all-items"
+                        >
+                          ✓ Check All
+                        </button>
+                        <button
+                          class="btn-outline"
+                          style="flex: 1; font-size: 0.8rem"
+                          id="btn-reset-items"
+                        >
+                          ↺ Reset
+                        </button>
+                      </div>
+
+                      <div
+                        style="
+                          background: rgba(16, 185, 129, 0.08);
+                          border-left: 3px solid var(--primary-emerald);
+                          padding: 12px;
+                          border-radius: 4px;
+                          font-size: 0.78rem;
+                          color: #a7f3d0;
+                          margin-top: 12px;
+                        "
+                      >
+                        💡 <strong>Pro Tip for Kamran Mohsin:</strong> Keep
+                        physical photocopies of your CNIC and car registration
+                        in upper glove compartment for checkposts.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Emergency One-Sheet -->
+            <div id="vault-emergency-pane" style="display: none">
+              <div
+                class="emergency-sheet-wrapper"
+                id="printable-emergency-sheet"
+              >
+                <div class="emergency-header-action">
+                  <div>
+                    <div class="emergency-badge">
+                      🚨 Zero-Internet Offline One-Sheet
+                    </div>
+                    <h2
+                      style="
+                        font-size: 1.6rem;
+                        font-weight: 800;
+                        margin-top: 6px;
+                        color: #ffffff;
+                      "
+                    >
+                      WanderWise Emergency Card
+                    </h2>
+                    <div style="font-size: 0.82rem; color: var(--text-muted)">
+                      Issued for: <strong>Kamran Mohsin</strong> •
+                      Destination:
+                      <strong id="emergency-destination-display"
+                        >Swat Valley</strong
+                      >
+                      • Dates:
+                      <strong id="emergency-dates-display"
+                        >12 Sep - 16 Sep 2025</strong
+                      >
+                    </div>
+                  </div>
+
+                  <div
+                    style="display: flex; gap: 10px"
+                    class="btn-print-action"
+                  >
+                    <button class="btn-primary" id="btn-print-one-sheet">
+                      🖨️ Print / Save as PDF
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Emergency Main Details Grid -->
+                <div class="emergency-grid">
+                  <!-- Hotel Address -->
+                  <div class="hotel-address-card">
+                    <div class="address-info">
+                      <h4>Hotel Address & Local Script</h4>
+                      <div class="hotel-en" id="emergency-hotel-en">
+                        Swat Serena Hotel, Saidu Sharif Road
+                      </div>
+                      <div class="hotel-ur" id="emergency-hotel-ur">
+                        ہوٹل سوات سیرینا، مین سیدو شریف
+                        روڈ، بالمقابل سرکٹ ہاؤس، سوات
+                      </div>
+                      <div
+                        style="
+                          font-size: 0.75rem;
+                          color: var(--text-dim);
+                          margin-top: 4px;
+                        "
+                      >
+                        Show this Urdu script to local taxi drivers if GPS is
+                        offline.
+                      </div>
+                    </div>
+
+                    <div class="qr-box" title="Emergency Verification QR Code">
+                      <svg viewBox="0 0 100 100" fill="#000000">
+                        <rect width="100" height="100" fill="#ffffff" />
+                        <path
+                          d="M10,10 h30 v30 h-30 z M15,15 v20 h20 v-20 z M20,20 h10 v10 h-10 z"
+                        />
+                        <path
+                          d="M60,10 h30 v30 h-30 z M65,15 v20 h20 v-20 z M70,20 h10 v10 h-10 z"
+                        />
+                        <path
+                          d="M10,60 h30 v30 h-30 z M15,65 v20 h20 v-20 z M20,70 h10 v10 h-10 z"
+                        />
+                        <rect x="45" y="15" width="8" height="8" />
+                        <rect x="45" y="30" width="8" height="18" />
+                        <rect x="58" y="48" width="10" height="8" />
+                        <rect x="15" y="48" width="10" height="8" />
+                        <rect x="48" y="70" width="16" height="8" />
+                        <rect x="75" y="70" width="15" height="15" />
+                        <rect x="70" y="55" width="8" height="8" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <!-- Emergency Helplines -->
+                  <div class="emergency-contacts-card">
+                    <h4
+                      style="
+                        font-size: 0.95rem;
+                        font-weight: 700;
+                        margin-bottom: 14px;
+                        color: #ffffff;
+                      "
+                    >
+                      📞 National & Regional Helplines
+                    </h4>
+                    <div id="emergency-helplines-list">
+                      <!-- Populated via JS -->
+                    </div>
+                  </div>
+
+                  <!-- Key Contacts & Booking -->
+                  <div class="booking-summary-card">
+                    <h4
+                      style="
+                        font-size: 0.95rem;
+                        font-weight: 700;
+                        margin-bottom: 14px;
+                        color: #ffffff;
+                      "
+                    >
+                      📋 Key Contacts & Booking
+                    </h4>
+
+                    <div
+                      style="
+                        background: rgba(255, 255, 255, 0.04);
+                        padding: 12px;
+                        border-radius: var(--radius-sm);
+                        margin-bottom: 12px;
+                      "
+                    >
+                      <div style="font-size: 0.72rem; color: var(--text-muted)">
+                        BOOKING REFERENCE
+                      </div>
+                      <div
+                        style="
+                          font-size: 1.15rem;
+                          font-weight: 800;
+                          color: var(--primary-emerald);
+                          letter-spacing: 1px;
+                        "
+                        id="emergency-booking-ref"
+                      >
+                        SWAT-PKR-2292
+                      </div>
+                    </div>
+
+                    <div id="emergency-trip-contacts-list">
+                      <!-- Populated via JS -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Safety Notes -->
+                <div class="safety-notes-box">
+                  <strong style="display: block; margin-bottom: 4px"
+                    >⚠️ Quick Safety Protocol:</strong
+                  >
+                  <ul
+                    style="padding-left: 18px; line-height: 1.5"
+                    id="emergency-notes-list"
+                  >
+                    <!-- Populated via JS -->
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================== PAGE 5: WANDERWISE PRO ==================== -->
+          <section class="page-view" id="view-pro">
+            <div class="pro-hero-banner anim-on-scroll">
+              <div
+                class="hero-pill-badge"
+                style="
+                  background: rgba(99, 102, 241, 0.2);
+                  border-color: rgba(99, 102, 241, 0.4);
+                  color: #a5b4fc;
+                "
+              >
+                PREMIUM LIFETIME UPGRADE
+              </div>
+              <h2>Supercharge Your Adventures With WanderWise PRO</h2>
+              <p>
+                Unlock unlimited multi-city planning, custom destinations,
+                real-time satellite Doppler radar, unlimited FairShare debt
+                settlement, and 1-click offline emergency one-sheets.
+              </p>
+              <div
+                id="pro-current-status"
+                style="
+                  margin-top: 10px;
+                  font-size: 0.85rem;
+                  font-weight: 700;
+                  color: #a5b4fc;
+                "
+              >
+                UPGRADE AVAILABLE
+              </div>
+            </div>
+
+            <!-- Pending Payment Banner -->
+            <div
+              id="pending-payment-banner"
+              style="display: none"
+              class="pending-payment-banner"
+            >
+              <div class="pending-banner-icon">⏳</div>
+              <div class="pending-banner-text">
+                <div class="title">
+                  Payment Proof Submitted — Under Review
+                </div>
+                <div class="sub" id="pending-banner-sub">
+                  Admin verify kar raha hai. PRO activate hone par notification
+                  milega.
+                </div>
+              </div>
+              <button class="pending-check-btn" id="btn-check-payment-status">
+                🔄 Check Status
+              </button>
+            </div>
+
+            <!-- PRO ACTIVE SECTION (shown when PRO is active) -->
+            <div
+              id="pro-active-section"
+              style="display: none"
+              class="pro-active-congratulations anim-on-scroll"
+            >
+              <div class="pro-active-crown">👑</div>
+              <h3>WanderWise PRO is Active!</h3>
+              <p>
+                Mubarak ho, Kamran Mohsin! Sare premium features unlock ho chuke
+                hain. Enjoy karo apni trip planning!
+              </p>
+              <div class="pro-active-features-grid">
+                <div class="pro-active-feat">
+                  <span>🌍</span> Unlimited Custom Destinations
+                </div>
+                <div class="pro-active-feat">
+                  <span>⚡</span> AI Fatigue Engine — Full Power
+                </div>
+                <div class="pro-active-feat">
+                  <span>☔</span> Rain Mode + 100+ Indoor Spots
+                </div>
+                <div class="pro-active-feat">
+                  <span>💸</span> Unlimited FairShare Groups
+                </div>
+                <div class="pro-active-feat">
+                  <span>🚨</span> Offline SOS Emergency Sheets
+                </div>
+                <div class="pro-active-feat">
+                  <span>🌦️</span> Live Satellite Weather Radar
+                </div>
+                <div class="pro-active-feat">
+                  <span>💬</span> Priority AI Chat Support
+                </div>
+                <div class="pro-active-feat">
+                  <span>☁️</span> Cloud Backup + Multi-Device
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 12px;
+                  justify-content: center;
+                  flex-wrap: wrap;
+                  margin-top: 24px;
+                "
+              >
+                <button
+                  class="btn-primary"
+                  style="padding: 12px 28px"
+                  onclick="window.app.switchView('view-itinerary')"
+                >
+                  🗺️ Start Planning My Trip
+                </button>
+                <button
+                  class="btn-outline"
+                  id="btn-admin-reset-pro"
+                  style="
+                    padding: 12px 20px;
+                    border-color: rgba(244, 63, 94, 0.4);
+                    color: #fda4af;
+                    font-size: 0.85rem;
+                  "
+                  title="Reset PRO status to test the upgrade payment flow again"
+                >
+                  ⚙️ Reset to Free Plan (Test Upgrade)
+                </button>
+              </div>
+            </div>
+
+            <!-- PRO UPGRADE SECTION (shown when not yet PRO) -->
+            <div id="pro-upgrade-section">
+              <!-- How to Buy Steps -->
+              <div class="pro-steps-guide-row anim-on-scroll">
+                <div class="pro-step-guide-card">
+                  <div class="pro-step-number-bubble">1</div>
+                  <h4>Send Payment to Meezan Bank</h4>
+                  <p>
+                    Transfer <strong>Rs 100 PKR only!</strong> to Meezan Bank
+                    Account <strong>03046942398</strong> (Kamran Mohsin) via
+                    Mobile App, Raast, JazzCash, or EasyPaisa.
+                  </p>
+                </div>
+                <div class="pro-step-guide-card">
+                  <div class="pro-step-number-bubble">2</div>
+                  <h4>Take a Screenshot / Get Receipt</h4>
+                  <p>
+                    After payment, take a clear screenshot of your transaction
+                    confirmation or bank receipt slip showing transfer details.
+                  </p>
+                </div>
+                <div class="pro-step-guide-card">
+                  <div class="pro-step-number-bubble">3</div>
+                  <h4>Upload Proof + Enter Sender Number</h4>
+                  <p>
+                    Upload your payment screenshot AND enter your
+                    <strong>Sender Mobile Number</strong> or
+                    <strong>Transaction ID</strong>. Admin verifies your real
+                    payment — PRO activates within 24 hours.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Pricing Plans -->
+              <div class="pricing-plans-grid anim-on-scroll">
+                <!-- Free Plan -->
+                <div class="plan-card">
+                  <div class="plan-header">
+                    <div class="plan-name">Explorer Free</div>
+                    <div class="plan-price-block">
+                      <span class="plan-price-currency">Rs</span>
+                      <span class="plan-price-num">0</span>
+                      <span class="plan-price-tenure">/ forever</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted)">
+                      Basic trip planning for casual solo travelers.
+                    </p>
+                  </div>
+                  <ul class="plan-features-list">
+                    <li><span class="chk">✓</span> 1 Active Trip Plan</li>
+                    <li>
+                      <span class="chk">✓</span> Basic Daily Itinerary (5
+                      Days)
+                    </li>
+                    <li>
+                      <span class="chk">✓</span> Standard Packing Checklist
+                    </li>
+                    <li class="disabled">
+                      <span class="chk">✕</span> Custom Destination Search
+                    </li>
+                    <li class="disabled">
+                      <span class="chk">✕</span> Real-time Fatigue Prediction
+                    </li>
+                    <li class="disabled">
+                      <span class="chk">✕</span> Rain Mode Auto-Swap
+                    </li>
+                    <li class="disabled">
+                      <span class="chk">✕</span> FairShare Debt Minimizer
+                    </li>
+                    <li class="disabled">
+                      <span class="chk">✕</span> Offline Emergency One-Sheet
+                    </li>
+                  </ul>
+                  <button class="btn-outline" style="width: 100%" disabled>
+                    Current Default Plan
+                  </button>
+                </div>
+
+                <!-- PRO Plan -->
+                <div class="plan-card highlighted">
+                  <div class="popular-badge">
+                    RECOMMENDED • LIFETIME ACCESS
+                  </div>
+                  <div class="plan-header">
+                    <div class="plan-name" style="color: #a5b4fc">
+                      WanderWise PRO Lifetime
+                    </div>
+                    <div class="plan-price-block">
+                      <span class="plan-price-currency" id="pro-price-curr"
+                        >Rs</span
+                      >
+                      <span class="plan-price-num" id="pro-price-display"
+                        >100</span
+                      >
+                      <span class="plan-price-tenure">one-time payment</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #cbd5e1">
+                      Everything for seamless group travel with zero stress.
+                    </p>
+                  </div>
+                  <ul class="plan-features-list">
+                    <li>
+                      <span class="chk">✓</span>
+                      <strong>Unlimited Custom Destinations</strong>
+                    </li>
+                    <li>
+                      <span class="chk">✓</span>
+                      <strong>⚡ AI Fatigue &amp; Energy Engine</strong>
+                    </li>
+                    <li>
+                      <span class="chk">✓</span>
+                      <strong>☔ Rain Mode with 100+ Indoor Spots</strong>
+                    </li>
+                    <li>
+                      <span class="chk">✓</span>
+                      <strong>💸 FairShare Debt Minimizer</strong>
+                    </li>
+                    <li>
+                      <span class="chk">✓</span>
+                      <strong>🚨 Printable Offline One-Sheet</strong>
+                    </li>
+                    <li>
+                      <span class="chk">✓</span>
+                      <strong>🌦️ Live Satellite Weather Radar</strong>
+                    </li>
+                    <li>
+                      <span class="chk">✓</span> VIP Priority Support 24/7
+                    </li>
+                    <li>
+                      <span class="chk">✓</span> Cloud Backup &amp;
+                      Multi-Device Sync
+                    </li>
+                  </ul>
+
+                  <div class="bank-direct-card">
+                    <div class="bank-name-label">
+                      <span>🏛️</span>
+                      <span
+                        >Direct Bank Transfer:
+                        <strong>Meezan Bank</strong></span
+                      >
+                    </div>
+                    <div class="bank-account-copy-row">
+                      <span class="account-num-display">03046942398</span>
+                      <button class="btn-copy-acc" id="btn-copy-number-plan">
+                        📋 Copy
+                      </button>
+                    </div>
+                    <div style="font-size: 0.72rem; color: var(--text-dim)">
+                      Title:
+                      <strong>WanderWise Services (Kamran Mohsin)</strong> •
+                      Admin Verified Activation
+                    </div>
+                  </div>
+
+                  <div style="margin-top: 20px">
+                    <button
+                      class="btn-primary"
+                      style="
+                        width: 100%;
+                        background: var(--grad-pro);
+                        color: #ffffff;
+                      "
+                      id="btn-open-payment-modal"
+                    >
+                      💳 Pay via Meezan Bank &amp; Activate PRO ➔
+                    </button>
+                    <div
+                      style="
+                        text-align: center;
+                        font-size: 0.72rem;
+                        color: var(--text-dim);
+                        margin-top: 8px;
+                      "
+                    >
+                      🔒 PRO activates only after admin verifies your real
+                      payment
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ==================== PAGE 6: LIVE WEATHER & RADAR ==================== -->
+          <section class="page-view" id="view-radar">
+            <div class="weather-view-grid">
+              <!-- Radar Map -->
+              <div class="radar-map-card anim-on-scroll">
+                <div class="card-title-bar">
+                  <div>
+                    <h3>🌦️ Live Mountain Satellite Radar</h3>
+                    <span
+                      style="font-size: 0.78rem; color: var(--text-muted)"
+                      id="radar-dest-subtitle"
+                      >Real-time precipitation scanner for Swat Valley</span
+                    >
+                  </div>
+                  <span
+                    class="badge"
+                    style="
+                      background: rgba(6, 182, 212, 0.2);
+                      color: #67e8f9;
+                      font-size: 0.72rem;
+                      padding: 4px 8px;
+                      border-radius: 4px;
+                    "
+                    >SCANNING</span
+                  >
+                </div>
+
+                <div class="radar-simulation-frame">
+                  <div class="radar-sweep"></div>
+                  <div
+                    class="radar-ping"
+                    style="top: 35%; left: 40%"
+                    title="Sector A: Clear"
+                  ></div>
+                  <div
+                    class="radar-ping"
+                    style="top: 60%; left: 70%"
+                    title="Sector B: Light Rain"
+                  ></div>
+                  <div
+                    class="radar-ping"
+                    style="top: 25%; left: 80%"
+                    title="Alpine Pass: Mist"
+                  ></div>
+
+                  <div
+                    style="
+                      position: absolute;
+                      bottom: 12px;
+                      left: 14px;
+                      font-size: 0.75rem;
+                      background: rgba(0, 0, 0, 0.6);
+                      padding: 4px 10px;
+                      border-radius: 4px;
+                      backdrop-filter: blur(8px);
+                    "
+                  >
+                    📡 Radar Doppler Station (Live Feed Active)
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 10px;
+                    margin-top: 18px;
+                  "
+                >
+                  <div
+                    style="
+                      background: rgba(255, 255, 255, 0.03);
+                      padding: 10px;
+                      border-radius: var(--radius-sm);
+                      text-align: center;
+                    "
+                  >
+                    <div style="font-size: 0.72rem; color: var(--text-muted)">
+                      Cloud Density
+                    </div>
+                    <strong style="color: #67e8f9">62% Overcast</strong>
+                  </div>
+                  <div
+                    style="
+                      background: rgba(255, 255, 255, 0.03);
+                      padding: 10px;
+                      border-radius: var(--radius-sm);
+                      text-align: center;
+                    "
+                  >
+                    <div style="font-size: 0.72rem; color: var(--text-muted)">
+                      Wind Velocity
+                    </div>
+                    <strong style="color: #6ee7b7">14 km/h WNW</strong>
+                  </div>
+                  <div
+                    style="
+                      background: rgba(255, 255, 255, 0.03);
+                      padding: 10px;
+                      border-radius: var(--radius-sm);
+                      text-align: center;
+                    "
+                  >
+                    <div style="font-size: 0.72rem; color: var(--text-muted)">
+                      Visibility
+                    </div>
+                    <strong style="color: #fcd34d">8.5 km</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 5-Day Forecast -->
+              <div class="forecast-details-card anim-on-scroll">
+                <div class="card-title-bar">
+                  <div>
+                    <h3>Day-by-Day Weather Forecast</h3>
+                    <span style="font-size: 0.78rem; color: var(--text-muted)"
+                      >Weather timeline matching your actual trip dates</span
+                    >
+                  </div>
+                </div>
+
+                <div class="forecast-days-list" id="forecast-days-container">
+                  <!-- Dynamically populated from actual trip dates via JS -->
+                </div>
+
+                <div
+                  style="
+                    background: rgba(6, 182, 212, 0.08);
+                    border-left: 3px solid var(--accent-cyan);
+                    padding: 14px;
+                    border-radius: var(--radius-sm);
+                    margin-top: 18px;
+                    font-size: 0.8rem;
+                    color: #bae6fd;
+                  "
+                >
+                  🛡️ <strong>Rain Mode Tip:</strong> When Rain Mode is ON,
+                  WanderWise auto-swaps outdoor treks for covered museums, spas,
+                  and artisan tea houses!
+                </div>
+
+                <!-- Weather Legend -->
+                <div
+                  style="
+                    display: flex;
+                    gap: 16px;
+                    flex-wrap: wrap;
+                    margin-top: 14px;
+                    padding: 10px;
+                    background: rgba(255, 255, 255, 0.02);
+                    border-radius: var(--radius-sm);
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 4px;
+                      font-size: 0.72rem;
+                      color: var(--text-dim);
+                    "
+                  >
+                    <span>🌧️</span> Rain
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 4px;
+                      font-size: 0.72rem;
+                      color: var(--text-dim);
+                    "
+                  >
+                    <span>⛅</span> Partly Cloudy
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 4px;
+                      font-size: 0.72rem;
+                      color: var(--text-dim);
+                    "
+                  >
+                    <span>☀️</span> Clear
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 4px;
+                      font-size: 0.72rem;
+                      color: var(--text-dim);
+                    "
+                  >
+                    <span>🌤️</span> Partly Sunny
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- ==================== MEEZAN BANK PRO CHECKOUT MODAL ==================== -->
+    <div class="modal-overlay" id="meezan-checkout-modal">
+      <div class="modal-box">
+        <button class="modal-close-btn" id="btn-close-meezan-modal">
+          &times;
+        </button>
+
+        <div class="meezan-brand-badge">
+          <span class="icon">🏛️</span>
+          <div class="txt">
+            Meezan Bank — Official Islamic Payment Gateway
+          </div>
+        </div>
+
+        <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 6px">
+          Activate WanderWise PRO
+        </h3>
+        <p
+          style="
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+          "
+        >
+          Complete 3 quick steps below to activate your lifetime PRO plan:
+        </p>
+
+        <!-- Bank Details -->
+        <div class="account-highlight-card">
+          <div class="label">Meezan Bank Account / JazzCash / Raast Number</div>
+          <div class="acc-number-row">
+            <span class="acc-number" id="meezan-acc-display">03046942398</span>
+            <button class="btn-copy-acc" id="btn-copy-meezan-number">
+              📋 Copy
+            </button>
+          </div>
+          <div class="title-text">
+            Account Title: <strong>WanderWise Services (Kamran Mohsin)</strong>
+          </div>
+          <div
+            style="
+              font-size: 0.75rem;
+              color: var(--text-muted);
+              margin-top: 4px;
+            "
+          >
+            Accepts: Raast, Meezan App, JazzCash, EasyPaisa, Nayapay, SadaPay &
+            all Pakistani banks
+          </div>
+        </div>
+
+        <!-- Payment Amount -->
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 16px;
+          "
+        >
+          <span style="font-size: 0.85rem; color: var(--text-muted)"
+            >Payable Amount:</span
+          >
+          <strong
+            style="font-size: 1.25rem; color: #ffffff"
+            id="modal-payable-amount"
+            >Rs 100 PKR</strong
+          >
+        </div>
+
+        <!-- STEP 1: Attach Payment Proof -->
+        <div class="form-group">
+          <label class="form-label"
+            >📸 Step 1: Attach Payment Screenshot / Bank Receipt</label
+          >
+          <div
+            id="proof-upload-box"
+            style="
+              border: 2px dashed rgba(16, 185, 129, 0.4);
+              border-radius: var(--radius-md);
+              padding: 14px;
+              text-align: center;
+              cursor: pointer;
+              background: rgba(16, 185, 129, 0.04);
+              transition: all 0.2s ease;
+            "
+          >
+            <input
+              type="file"
+              id="proof-file-input"
+              accept="image/*,.pdf"
+              style="display: none"
+            />
+            <div id="proof-upload-prompt">
+              <span
+                style="font-size: 1.5rem; display: block; margin-bottom: 4px"
+                >📸</span
+              >
+              <span style="font-size: 0.82rem; font-weight: 700; color: #a7f3d0"
+                >Click or Drag to Attach Payment Receipt</span
+              >
+              <span
+                style="
+                  display: block;
+                  font-size: 0.7rem;
+                  color: var(--text-muted);
+                "
+                >Supports EasyPaisa, JazzCash, Raast, Mobile Bank SMS
+                screenshot</span
+              >
+            </div>
+            <div
+              id="proof-preview-container"
+              style="
+                display: none;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 6px;
+              "
+            >
+              <img
+                id="proof-preview-img"
+                src=""
+                alt="Proof Preview"
+                style="
+                  width: 50px;
+                  height: 50px;
+                  object-fit: cover;
+                  border-radius: 6px;
+                  border: 1px solid var(--primary-emerald);
+                "
+              />
+              <div style="text-align: left">
+                <span
+                  id="proof-file-name"
+                  style="
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    color: #ffffff;
+                    display: block;
+                  "
+                  >receipt.jpg</span
+                >
+                <span style="font-size: 0.7rem; color: var(--primary-emerald)"
+                  >✓ File attached</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Enter TRX/Sender Number -->
+        <div class="form-group">
+          <label class="form-label" for="input-trx-id">
+            📱 Step 2: Your Sender Mobile Number OR Transaction ID
+          </label>
+          <input
+            type="text"
+            class="input-box"
+            id="input-trx-id"
+            placeholder="e.g. 0300-1234567 or TRX-982143ABC"
+            required
+          />
+          <div
+            style="font-size: 0.72rem; color: var(--text-dim); margin-top: 4px"
+          >
+            💡 Apna sender mobile number (03XX-XXXXXXX) ya bank TRX Reference
+            ID darj karein.
+          </div>
+        </div>
+        <!-- Submission Confirmation Box -->
+        <div
+          id="verification-progress-box"
+          style="
+            display: none;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-bottom: 16px;
+            text-align: center;
+          "
+        >
+          <span style="font-size: 1.5rem; display: block; margin-bottom: 6px"
+            >⏳</span
+          >
+          <div
+            id="verification-step-text"
+            style="font-size: 0.85rem; font-weight: 700; color: #fcd34d"
+          >
+            Submitted for Manual Review
+          </div>
+          <div
+            style="
+              font-size: 0.72rem;
+              color: var(--text-muted);
+              margin-top: 4px;
+            "
+          >
+            We'll verify your payment within 24 hours and email/SMS you once
+            approved.
+          </div>
+        </div>
+
+        <button
+          class="btn-primary"
+          style="
+            width: 100%;
+            background: var(--grad-pro);
+            color: #ffffff;
+            padding: 14px;
+          "
+          id="btn-confirm-payment"
+        >
+          📨 Submit Payment Proof for Review
+        </button>
+        <div
+          style="
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.72rem;
+            color: var(--text-dim);
+          "
+        >
+          🔒 Dedicated for Kamran Mohsin • Official Meezan Bank Islamic
+          Gateway
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== EDIT BUDGET MODAL ==================== -->
+    <div class="modal-overlay" id="edit-budget-modal">
+      <div class="modal-box">
+        <button class="modal-close-btn" id="btn-close-budget-modal">
+          &times;
+        </button>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 6px">
+          ✏️ Update Trip Budget
+        </h3>
+        <p
+          style="
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+          "
+        >
+          Adjust your total estimated trip funds. This syncs across all pages.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-budget-input"
+            >Total Budget (<span class="currency-symbol-label">Rs</span>)</label
+          >
+          <input
+            type="number"
+            class="input-box"
+            id="edit-budget-input"
+            value="350000"
+            step="5000"
+            required
+          />
+        </div>
+
+        <button
+          class="btn-primary"
+          style="width: 100%; margin-top: 10px"
+          id="btn-save-budget-modal"
+        >
+          💾 Save & Sync Budget Across All Pages
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== ADD MEMBER MODAL ==================== -->
+    <div class="modal-overlay" id="add-member-modal">
+      <div class="modal-box">
+        <button class="modal-close-btn" id="btn-close-member-modal">
+          &times;
+        </button>
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 6px">
+          + Add New Squad Member
+        </h3>
+        <p
+          style="
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+          "
+        >
+          Add a friend to split expenses and settle debts automatically.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="new-member-name">Member Name</label>
+          <input
+            type="text"
+            class="input-box"
+            id="new-member-name"
+            placeholder="e.g. Hamza, Bilal, or Saad"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Select Avatar Icon</label>
+          <div class="avatar-selector-grid" id="avatar-choices-container">
+            <button
+              type="button"
+              class="avatar-choice-btn selected"
+              data-avatar="👨‍💻"
+            >
+              👨‍💻
+            </button>
+            <button type="button" class="avatar-choice-btn" data-avatar="🧔">
+              🧔
+            </button>
+            <button type="button" class="avatar-choice-btn" data-avatar="🧗">
+              🧗
+            </button>
+            <button type="button" class="avatar-choice-btn" data-avatar="🏄">
+              🏄
+            </button>
+            <button type="button" class="avatar-choice-btn" data-avatar="🤠">
+              🤠
+            </button>
+            <button type="button" class="avatar-choice-btn" data-avatar="🥾">
+              🥾
+            </button>
+            <button
+              type="button"
+              class="avatar-choice-btn"
+              data-avatar="🧑‍🚀"
+            >
+              🧑‍🚀
+            </button>
+            <button
+              type="button"
+              class="avatar-choice-btn"
+              data-avatar="👩‍🦰"
+            >
+              👩‍🦰
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="new-member-initial-spend"
+            >Initial Contribution / Outlay (<span class="currency-symbol-label"
+              >Rs</span
+            >)</label
+          >
+          <input
+            type="number"
+            class="input-box"
+            id="new-member-initial-spend"
+            placeholder="0"
+            value="0"
+          />
+        </div>
+
+        <button
+          class="btn-primary"
+          style="width: 100%; margin-top: 10px"
+          id="btn-save-new-member"
+        >
+          👥 Add Member to Squad
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== ADD EXPENSE MODAL ==================== -->
+    <div class="modal-overlay" id="add-expense-modal">
+      <div class="modal-box">
+        <button class="modal-close-btn" id="btn-close-expense-modal">
+          &times;
+        </button>
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 16px">
+          + Add New Trip Expense
+        </h3>
+
+        <div class="form-group">
+          <label class="form-label">Expense Title / Description</label>
+          <input
+            type="text"
+            class="input-box"
+            id="new-expense-title"
+            placeholder="e.g. Malam Jabba Chairlift Tickets"
+            required
+          />
+        </div>
+
+        <div class="date-grid">
+          <div class="form-group">
+            <label class="form-label"
+              >Amount (<span class="currency-symbol-label">Rs</span>)</label
+            >
+            <input
+              type="number"
+              class="input-box"
+              id="new-expense-amount"
+              placeholder="e.g. 12000"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="input-box" id="new-expense-category">
+              <option value="Stay">🏨 Hotel / Stay</option>
+              <option value="Food">🍲 Food & Dining</option>
+              <option value="Transport">🚐 Transport / Fuel</option>
+              <option value="Activities" selected>
+                🎿 Activities & Tours
+              </option>
+              <option value="Emergency">🚨 Emergency / Medical</option>
+              <option value="General">📋 General</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Who Paid for this?</label>
+          <select class="input-box" id="new-expense-payer">
+            <!-- Populated from member list -->
+          </select>
+        </div>
+
+        <button
+          class="btn-primary"
+          style="width: 100%; margin-top: 10px"
+          id="btn-save-new-expense"
+        >
+          💸 Add Expense to Ledger
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== ADD ACTIVITY MODAL (12-Hour Format) ==================== -->
+    <div class="modal-overlay" id="add-activity-modal">
+      <div class="modal-box">
+        <button class="modal-close-btn" id="btn-close-activity-modal">
+          &times;
+        </button>
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 16px">
+          + Add Activity to Today's Itinerary
+        </h3>
+
+        <div class="form-group">
+          <label class="form-label">Activity Title</label>
+          <input
+            type="text"
+            class="input-box"
+            id="new-activity-title"
+            placeholder="e.g. Sunset Boat Cruise & Kehwa"
+            required
+          />
+        </div>
+
+        <div class="date-grid">
+          <div class="form-group">
+            <label class="form-label">Time Slot (12-Hour)</label>
+            <select class="input-box" id="new-activity-time-slot">
+              <option value="06:30 AM">06:30 AM — Early Sunrise</option>
+              <option value="07:00 AM">07:00 AM — Dawn Departure</option>
+              <option value="08:30 AM">08:30 AM — Morning Trek</option>
+              <option value="10:00 AM">10:00 AM — Sightseeing</option>
+              <option value="11:30 AM">11:30 AM — Midday</option>
+              <option value="01:00 PM">01:00 PM — Lunch & Rest</option>
+              <option value="02:30 PM">02:30 PM — Afternoon Trek</option>
+              <option value="04:00 PM" selected>
+                04:00 PM — Tea & Viewpoint
+              </option>
+              <option value="06:00 PM">06:00 PM — Sunset Leisure</option>
+              <option value="08:00 PM">08:00 PM — Traditional Feast</option>
+              <option value="09:30 PM">
+                09:30 PM — Bonfire & Stargazing
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Intensity / Energy</label>
+            <select class="input-box" id="new-activity-intensity">
+              <option value="Low">Low (Rest / Casual)</option>
+              <option value="Medium" selected>Medium (Moderate Walk)</option>
+              <option value="High">High (Steep Trek)</option>
+            </select>
+          </div>
+        </div>
+
+        <div
+          class="form-group"
+          style="display: flex; align-items: center; gap: 10px; margin-top: 6px"
+        >
+          <input
+            type="checkbox"
+            id="new-activity-outdoor"
+            checked
+            style="
+              width: 18px;
+              height: 18px;
+              accent-color: var(--primary-emerald);
+            "
+          />
+          <label
+            for="new-activity-outdoor"
+            style="font-size: 0.85rem; color: #ffffff"
+            >Outdoor activity (affected by Rain Mode)</label
+          >
+        </div>
+
+        <button
+          class="btn-primary"
+          style="width: 100%; margin-top: 16px"
+          id="btn-save-new-activity"
+        >
+          📝 Add to Current Day's Schedule
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== HOW IT WORKS MODAL ==================== -->
+    <div class="modal-overlay" id="how-it-works-modal">
+      <div class="modal-box" style="max-width: 640px">
+        <button class="modal-close-btn" id="btn-close-how-modal">
+          &times;
+        </button>
+
+        <div style="text-align: center; margin-bottom: 20px">
+          <span style="font-size: 2.4rem; display: block; margin-bottom: 6px"
+            >🧭</span
+          >
+          <h3 style="font-size: 1.4rem; font-weight: 800; color: #ffffff">
+            How WanderWise Works
+          </h3>
+          <p style="font-size: 0.82rem; color: var(--text-muted)">
+            Smarter Trips, Happier Journeys — In 5 Steps
+          </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <div
+            style="
+              display: flex;
+              gap: 14px;
+              background: rgba(255, 255, 255, 0.03);
+              padding: 14px;
+              border-radius: var(--radius-md);
+              border: 1px solid var(--border-subtle);
+            "
+          >
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: var(--grad-emerald);
+                color: #052e16;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                flex-shrink: 0;
+              "
+            >
+              1
+            </div>
+            <div>
+              <strong style="font-size: 0.92rem; color: #ffffff; display: block"
+                >🔍 Search Any Destination & Set Dates</strong
+              >
+              <span style="font-size: 0.8rem; color: var(--text-muted)"
+                >Type any city, valley or country in the search bar. Select
+                dates and budget — itinerary auto-generates for all
+                days!</span
+              >
+            </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              gap: 14px;
+              background: rgba(255, 255, 255, 0.03);
+              padding: 14px;
+              border-radius: var(--radius-md);
+              border: 1px solid var(--border-subtle);
+            "
+          >
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #06b6d4, #3b82f6);
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                flex-shrink: 0;
+              "
+            >
+              2
+            </div>
+            <div>
+              <strong style="font-size: 0.92rem; color: #ffffff; display: block"
+                >⚡ Fatigue Engine & Travel Vibe</strong
+              >
+              <span style="font-size: 0.8rem; color: var(--text-muted)"
+                >Pick Chill, High Adventure, Foodie, or Fast Explorer vibe.
+                Real-time energy meter tracks your pace and warns before
+                burnout.</span
+              >
+            </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              gap: 14px;
+              background: rgba(255, 255, 255, 0.03);
+              padding: 14px;
+              border-radius: var(--radius-md);
+              border: 1px solid var(--border-subtle);
+            "
+          >
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #10b981, #06b6d4);
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                flex-shrink: 0;
+              "
+            >
+              3
+            </div>
+            <div>
+              <strong style="font-size: 0.92rem; color: #ffffff; display: block"
+                >☔ Rain Mode One-Click Switch</strong
+              >
+              <span style="font-size: 0.8rem; color: var(--text-muted)"
+                >Toggle Rain Mode ON — WanderWise instantly swaps rainy
+                outdoor treks for covered museums, spas, and artisan tea
+                houses.</span
+              >
+            </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              gap: 14px;
+              background: rgba(255, 255, 255, 0.03);
+              padding: 14px;
+              border-radius: var(--radius-md);
+              border: 1px solid var(--border-subtle);
+            "
+          >
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #f59e0b, #ef4444);
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                flex-shrink: 0;
+              "
+            >
+              4
+            </div>
+            <div>
+              <strong style="font-size: 0.92rem; color: #ffffff; display: block"
+                >💸 FairShare Debt Minimizer</strong
+              >
+              <span style="font-size: 0.8rem; color: var(--text-muted)"
+                >Add squad members and shared expenses. Smart algorithm settles
+                all cross-debts with minimum direct transfers.</span
+              >
+            </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              gap: 14px;
+              background: rgba(255, 255, 255, 0.03);
+              padding: 14px;
+              border-radius: var(--radius-md);
+              border: 1px solid var(--border-subtle);
+            "
+          >
+            <div
+              style="
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: var(--grad-pro);
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 800;
+                flex-shrink: 0;
+              "
+            >
+              5
+            </div>
+            <div>
+              <strong style="font-size: 0.92rem; color: #ffffff; display: block"
+                >🚨 Zero-Internet SOS Sheet + PRO Upgrade</strong
+              >
+              <span style="font-size: 0.8rem; color: var(--text-muted)"
+                >Print offline emergency card with hotel in Urdu, emergency
+                numbers & booking reference. Upgrade to PRO via Meezan Bank for
+                Rs 100.</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <button
+          class="btn-primary"
+          style="width: 100%; margin-top: 20px"
+          id="btn-how-start-now"
+        >
+          ✅ Got It! Let's Explore Itinerary ➔
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== PRO VIP RECEIPT MODAL ==================== -->
+    <div class="modal-overlay" id="pro-receipt-modal">
+      <div class="modal-box" style="max-width: 500px; text-align: center">
+        <button class="modal-close-btn" id="btn-close-receipt-modal">
+          &times;
+        </button>
+
+        <div
+          style="
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid var(--primary-emerald);
+            color: var(--primary-emerald);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+          "
+        >
+          ✓
+        </div>
+
+        <div
+          class="badge"
+          style="
+            background: rgba(245, 158, 11, 0.2);
+            color: #fcd34d;
+            font-size: 0.75rem;
+            padding: 4px 14px;
+            border-radius: var(--radius-full);
+            margin-bottom: 8px;
+          "
+        >
+          SUBMITTED — PENDING REVIEW ⏳
+        </div>
+
+        <h3
+          style="
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 6px;
+          "
+        >
+          Payment Proof Received!
+        </h3>
+        <p
+          style="
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+          "
+        >
+          Thank you! We'll manually verify your transaction within 24 hours and
+          notify you by email/SMS once PRO is activated.
+        </p>
+        <!-- Receipt Voucher -->
+        <div
+          style="
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            text-align: left;
+            margin-bottom: 20px;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+              padding-bottom: 8px;
+              margin-bottom: 8px;
+              font-size: 0.82rem;
+            "
+          >
+            <span style="color: var(--text-muted)">Submitted On:</span>
+            <strong style="color: #fcd34d" id="receipt-modal-date"
+              >Today</strong
+            >
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+              padding-bottom: 8px;
+              margin-bottom: 8px;
+              font-size: 0.82rem;
+            "
+          >
+            <span style="color: var(--text-muted)">Beneficiary Account:</span>
+            <strong style="color: #a7f3d0">Meezan Bank (03046942398)</strong>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+              padding-bottom: 8px;
+              margin-bottom: 8px;
+              font-size: 0.82rem;
+            "
+          >
+            <span style="color: var(--text-muted)">Amount Paid:</span>
+            <strong style="color: #ffffff">Rs 100 PKR (Lifetime)</strong>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+              padding-bottom: 8px;
+              margin-bottom: 8px;
+              font-size: 0.82rem;
+            "
+          >
+            <span style="color: var(--text-muted)">Activation Date:</span>
+            <strong style="color: #6ee7b7" id="receipt-modal-date"
+              >Today</strong
+            >
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              font-size: 0.82rem;
+            "
+          >
+            <span style="color: var(--text-muted)">Transaction / Ref ID:</span>
+            <strong
+              style="color: #67e8f9; font-family: monospace"
+              id="receipt-modal-trx-val"
+              >TRX-VERIFIED</strong
+            >
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px">
+          <button
+            class="btn-primary"
+            style="flex: 1"
+            id="btn-receipt-view-features"
+          >
+            Enjoy PRO Features ➔
+          </button>
+          <button class="btn-outline" style="flex: 1" id="btn-receipt-print">
+            🖨️ Print Receipt
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas
+      id="confetti-canvas"
+      class="celebration-canvas"
+      style="display: none"
+    ></canvas>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ==================== AI TRAVEL CHATBOT ==================== -->
+    <button
+      class="chatbot-fab"
+      id="chatbot-fab-btn"
+      title="Ask WanderAI — Your Travel Assistant"
+    >
+      🤖
+      <span class="fab-badge">AI</span>
+    </button>
+
+    <div class="chatbot-window" id="chatbot-window">
+      <div class="chatbot-header">
+        <div class="chatbot-avatar">🧭</div>
+        <div class="chatbot-info">
+          <div class="chatbot-name">WanderAI — Travel Assistant</div>
+          <div class="chatbot-status">
+            <span class="chatbot-status-dot"></span>
+            Online • Powered by WanderWise
+          </div>
+        </div>
+        <button class="chatbot-close-btn" id="chatbot-close-btn">✕</button>
+      </div>
+
+      <div class="chatbot-messages" id="chatbot-messages">
+        <div class="chat-msg bot">
+          <div class="chat-msg-avatar">🧭</div>
+          <div class="chat-bubble">
+            Aoa Kamran Mohsin! 👋 Main WanderAI hun — apka personal travel
+            assistant. Kisi bhi destination, activity, ya trip ke baare mein
+            poochh saktay hain!
+          </div>
+        </div>
+        <div class="chat-msg bot">
+          <div class="chat-msg-avatar">🧭</div>
+          <div class="chat-bubble">
+            💡 <strong>Mujh se poochh saktay hain:</strong><br />
+            • Best time to visit Hunza?<br />
+            • Swat mein kya dekhna chahiye?<br />
+            • Budget tips for mountain travel<br />
+            • Weather conditions & packing advice
+          </div>
+        </div>
+      </div>
+
+      <div class="chatbot-quick-replies" id="chatbot-quick-replies">
+        <button
+          class="quick-reply-btn"
+          data-msg="Best places to visit in Swat?"
+        >
+          🏔️ Swat spots
+        </button>
+        <button
+          class="quick-reply-btn"
+          data-msg="What to pack for mountain trip?"
+        >
+          🎒 Packing tips
+        </button>
+        <button
+          class="quick-reply-btn"
+          data-msg="Budget tips for Pakistan travel"
+        >
+          💸 Budget tips
+        </button>
+        <button
+          class="quick-reply-btn"
+          data-msg="Best time to visit Hunza Valley?"
+        >
+          📅 Best time Hunza
+        </button>
+      </div>
+
+      <div class="chatbot-input-row">
+        <input
+          type="text"
+          class="chatbot-input"
+          id="chatbot-input"
+          placeholder="Ask about any destination..."
+          autocomplete="off"
+        />
+        <button class="chatbot-send-btn" id="chatbot-send-btn">➤</button>
+      </div>
+    </div>
+
+    <!-- ==================== PRO ACTIVATION CELEBRATION OVERLAY ==================== -->
+    <div class="pro-activation-overlay" id="pro-activation-overlay">
+      <div class="pro-activation-card">
+        <span class="pro-crown-anim">👑</span>
+        <div class="pro-activation-title">PRO Activated!</div>
+        <p class="pro-activation-subtitle">
+          Mubarak ho Kamran Mohsin! Tumhara WanderWise PRO lifetime plan
+          successfully activate ho gaya hai!
+        </p>
+        <div class="pro-activation-features">
+          <div class="pro-act-feat">
+            <span>🌍</span> Unlimited custom destinations unlocked
+          </div>
+          <div class="pro-act-feat">
+            <span>⚡</span> AI Fatigue Engine — full power mode
+          </div>
+          <div class="pro-act-feat">
+            <span>☔</span> Rain Mode + 100+ indoor alternatives
+          </div>
+          <div class="pro-act-feat">
+            <span>💸</span> FairShare debt minimizer — unlimited groups
+          </div>
+          <div class="pro-act-feat">
+            <span>🚨</span> Offline SOS sheets — unlimited prints
+          </div>
+        </div>
+        <button class="pro-activation-btn" id="btn-close-pro-overlay">
+          🚀 Let's Explore PRO Features!
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Professional emoji-to-icon layer: keeps the existing UI/functionality but
+         replaces decorative emoji characters with developer-style Font Awesome icons. -->
+    <style>
+      .ww-professional-icon {
+        display: inline-block;
+        width: 1.1em;
+        text-align: center;
+        line-height: 1;
+        vertical-align: -0.08em;
+        flex: 0 0 auto;
+      }
+      .ww-professional-icon.ww-avatar-icon { font-size: 1.05em; }
+    </style>
+    <script>
+      (() => {
+        const ICONS = {
+          '🧭': 'fa-compass', '✨': 'fa-sparkles', '⚡': 'fa-bolt', '🔋': 'fa-battery-half',
+          '💸': 'fa-money-bill-transfer', '🛡️': 'fa-shield-halved', '🌦️': 'fa-cloud-sun-rain',
+          '👑': 'fa-crown', '👨‍💻': 'fa-user-tie', '🚀': 'fa-rocket', '☰': 'fa-bars',
+          '☔': 'fa-umbrella', '📍': 'fa-location-dot', '📡': 'fa-satellite-dish', '🚩': 'fa-flag',
+          '🔍': 'fa-magnifying-glass', '🏔️': 'fa-mountain-sun', '🌄': 'fa-mountain-sun',
+          '🏜️': 'fa-mountain-sun', '🌲': 'fa-tree', '☕': 'fa-mug-hot', '🎈': 'fa-balloon',
+          '🌴': 'fa-umbrella-beach', '📅': 'fa-calendar-days', '👥': 'fa-users', '💰': 'fa-sack-dollar',
+          '🎭': 'fa-masks-theater', '💡': 'fa-lightbulb', '✅': 'fa-circle-check', '🌍': 'fa-globe',
+          '🎯': 'fa-bullseye', '🌿': 'fa-leaf', '📈': 'fa-chart-line', '📸': 'fa-camera',
+          '🌅': 'fa-sun', '🌌': 'fa-star', '📝': 'fa-note-sticky', '🎒': 'fa-backpack',
+          '🚨': 'fa-siren-on', '🖨️': 'fa-print', '📞': 'fa-phone', '📋': 'fa-clipboard',
+          '⚠️': 'fa-triangle-exclamation', '⏳': 'fa-hourglass-half', '🔄': 'fa-rotate',
+          '🤖': 'fa-robot', '💬': 'fa-comments', '☁️': 'fa-cloud', '🏛️': 'fa-landmark',
+          '💳': 'fa-credit-card', '🏦': 'fa-building-columns', '⚖️': 'fa-scale-balanced',
+          '✏️': 'fa-pen', '💾': 'fa-floppy-disk', '📱': 'fa-mobile-screen-button',
+          '🗺️': 'fa-map', '🔒': 'fa-lock', '📨': 'fa-envelope', '📣': 'fa-bullhorn',
+          '⛅': 'fa-cloud-sun', '☀️': 'fa-sun', '🌤️': 'fa-cloud-sun', '🌧️': 'fa-cloud-rain',
+          '🎿': 'fa-person-skiing', '🚐': 'fa-van-shuttle', '🏨': 'fa-hotel', '🍲': 'fa-bowl-food',
+          '🧗': 'fa-person-hiking', '🏄': 'fa-person-surfing', '🤠': 'fa-hat-cowboy',
+          '🥾': 'fa-shoe-prints', '🧑‍🚀': 'fa-user-astronaut', '👩‍🦰': 'fa-user',
+          '🔮': 'fa-wand-magic-sparkles', '🏆': 'fa-trophy', '🪄': 'fa-wand-magic-sparkles',
+          '🎉': 'fa-party-horn', '❤️': 'fa-heart', '👤': 'fa-user', '🏠': 'fa-house',
+          '🛫': 'fa-plane-departure', '🛬': 'fa-plane-arrival', '🚗': 'fa-car', '🚆': 'fa-train',
+          '✈️': 'fa-plane', '⏱️': 'fa-stopwatch', '🔔': 'fa-bell'
+        };
+
+        const keys = Object.keys(ICONS).sort((a, b) => b.length - a.length);
+        const emojiPattern = new RegExp(keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+
+        function iconFor(emoji, extraClass = '') {
+          const cls = ICONS[emoji];
+          if (!cls) return null;
+          const i = document.createElement('i');
+          i.className = `fa-solid ${cls} ww-professional-icon ${extraClass}`.trim();
+          i.setAttribute('aria-hidden', 'true');
+          return i;
+        }
+
+        function convertTextNode(node) {
+          const value = node.nodeValue;
+          if (!value || !emojiPattern.test(value)) return;
+          emojiPattern.lastIndex = 0;
+          const frag = document.createDocumentFragment();
+          let last = 0;
+          let match;
+          while ((match = emojiPattern.exec(value))) {
+            if (match.index > last) frag.appendChild(document.createTextNode(value.slice(last, match.index)));
+            const icon = iconFor(match[0]);
+            if (icon) frag.appendChild(icon);
+            else frag.appendChild(document.createTextNode(match[0]));
+            last = match.index + match[0].length;
+          }
+          if (last < value.length) frag.appendChild(document.createTextNode(value.slice(last)));
+          node.parentNode.replaceChild(frag, node);
+        }
+
+        function convert(root = document.body) {
+          if (!root) return;
+          const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+            acceptNode(node) {
+              const parent = node.parentElement;
+              if (!parent || ['SCRIPT','STYLE','TEXTAREA'].includes(parent.tagName) || parent.closest('.ww-professional-icon')) {
+                return NodeFilter.FILTER_REJECT;
+              }
+              return NodeFilter.FILTER_ACCEPT;
+            }
+          });
+          const nodes = [];
+          let node;
+          while ((node = walker.nextNode())) nodes.push(node);
+          nodes.forEach(convertTextNode);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+          convert();
+          const observer = new MutationObserver(mutations => {
+            observer.disconnect();
+            mutations.forEach(m => m.addedNodes.forEach(n => {
+              if (n.nodeType === Node.TEXT_NODE) convertTextNode(n);
+              else if (n.nodeType === Node.ELEMENT_NODE && !n.classList.contains('ww-professional-icon')) convert(n);
+            }));
+            observer.observe(document.body, { childList: true, subtree: true });
+          });
+          observer.observe(document.body, { childList: true, subtree: true });
+        });
+      })();
+    </script>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/debtEngine.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+      /* =========================================================
+         Trip Pulse — lightweight interaction layer
+         Does not alter existing WanderWise functionality.
+         ========================================================= */
+      (function initTripPulse() {
+        const energy = document.getElementById("trip-pulse-energy");
+        const energyLabel = document.getElementById("trip-pulse-energy-label");
+        const resultTitle = document.getElementById("trip-pulse-result-title");
+        const resultText = document.getElementById("trip-pulse-result-text");
+        const score = document.getElementById("trip-pulse-score");
+        const destination = document.getElementById("trip-pulse-destination");
+        const destInput = document.getElementById("dest-search-input");
+        const modeButtons = document.querySelectorAll(".trip-pulse-mode");
+
+        if (!energy || !energyLabel || !resultTitle || !resultText || !score) return;
+
+        let selectedMode = "adventure";
+
+        const modeData = {
+          adventure: {
+            low: {
+              title: "Soft Adventure",
+              text: "Choose one light activity and protect your recovery time between stops.",
+              boost: 0
+            },
+            mid: {
+              title: "Adventure Ready",
+              text: "A balanced adventure pace fits well. Keep a recovery gap after major activity.",
+              boost: 4
+            },
+            high: {
+              title: "Full Adventure Mode",
+              text: "You can handle a stronger activity block, followed by hydration and a rest window.",
+              boost: 7
+            }
+          },
+          scenic: {
+            low: {
+              title: "Slow Scenic Mode",
+              text: "Prioritize viewpoints, cafes and short walks. The journey itself is the experience.",
+              boost: 2
+            },
+            mid: {
+              title: "Scenic Explorer",
+              text: "Mix viewpoints with short walks and photo stops without overloading the day.",
+              boost: 5
+            },
+            high: {
+              title: "Photo Hunt Mode",
+              text: "Add sunrise, golden-hour and viewpoint stops while keeping transfers efficient.",
+              boost: 8
+            }
+          },
+          relax: {
+            low: {
+              title: "Recovery First",
+              text: "Keep the itinerary light: one highlight, generous buffers and plenty of downtime.",
+              boost: 3
+            },
+            mid: {
+              title: "Chill & Explore",
+              text: "Use relaxed pacing with flexible stops, food breaks and a comfortable evening.",
+              boost: 6
+            },
+            high: {
+              title: "Easygoing Explorer",
+              text: "You have room for a few extra stops, but keep the day intentionally unhurried.",
+              boost: 8
+            }
+          }
+        };
+
+        function getEnergyBand(value) {
+          if (value < 35) return "low";
+          if (value < 70) return "mid";
+          return "high";
+        }
+
+        function renderPulse() {
+          const value = Number(energy.value);
+          const band = getEnergyBand(value);
+
+          let label = "Low Energy";
+          if (value >= 35 && value < 70) label = "Balanced";
+          if (value >= 70) label = "Energetic";
+
+          energyLabel.textContent = value + "% " + label;
+
+          const data = modeData[selectedMode][band];
+          const adaptiveScore = Math.min(99, Math.max(35, Math.round(value * 0.78 + 22 + data.boost)));
+
+          resultTitle.textContent = data.title;
+          resultText.textContent = data.text;
+          score.textContent = adaptiveScore;
+        }
+
+        function syncDestination() {
+          if (!destination || !destInput) return;
+          const value = destInput.value.trim();
+          destination.textContent = value || "your destination";
+        }
+
+        energy.addEventListener("input", renderPulse);
+
+        modeButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            modeButtons.forEach((btn) => btn.classList.remove("active"));
+            button.classList.add("active");
+            selectedMode = button.dataset.pulseMode || "adventure";
+            renderPulse();
+          });
+        });
+
+        if (destInput) {
+          destInput.addEventListener("input", syncDestination);
+          destInput.addEventListener("change", syncDestination);
+        }
+
+        renderPulse();
+        syncDestination();
+      })();
+    </script>
+  </body>
+</html>

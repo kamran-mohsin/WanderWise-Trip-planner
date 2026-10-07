@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WanderWise — Admin Payment Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #070d18;
+      --card: #0f1c33;
+      --elevated: #16243f;
+      --border: rgba(255, 255, 255, 0.08);
+      --emerald: #10b981;
+      --cyan: #06b6d4;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --dim: #64748b;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+    .topbar {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .brand h1 { font-size: 1.1rem; font-weight: 800; color: #fff; }
+    .brand p { font-size: 0.72rem; color: var(--muted); font-weight: 500; }
+
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+    .api-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+      animation: pulse 2s infinite;
+    }
+
+    .dot.red { background: var(--rose); box-shadow: 0 0 8px var(--rose); }
+
+    @keyframes pulse {
+      0% { opacity: 0.7; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.7; transform: scale(0.9); }
+    }
+
+    .wrapper { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+    /* Login Section */
+    .login-section {
+      max-width: 420px;
+      margin: 60px auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      text-align: center;
+    }
+
+    .login-section h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 6px; }
+    .login-section p { font-size: 0.85rem; color: var(--muted); margin-bottom: 24px; }
+
+    label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); text-align: left; margin-bottom: 6px; }
+
+    input[type="password"], input[type="text"] {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 14px;
+    }
+
+    input:focus { border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 22px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: all 0.2s;
+    }
+
+    .btn-primary { background: linear-gradient(135deg, #10b981, #06b6d4); color: #052e16; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4); }
+    .btn-approve { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .btn-approve:hover { background: rgba(16, 185, 129, 0.35); }
+    .btn-reject { background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.3); }
+    .btn-reject:hover { background: rgba(244, 63, 94, 0.35); }
+    .btn-revoke { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .btn-revoke:hover { background: rgba(245, 158, 11, 0.35); }
+    .btn-delete { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.25); }
+    .btn-delete:hover { background: rgba(244, 63, 94, 0.3); color: #fb7185; border-color: rgba(244, 63, 94, 0.4); }
+    .btn-danger-outline { background: rgba(244, 63, 94, 0.12); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.35); }
+    .btn-danger-outline:hover { background: rgba(244, 63, 94, 0.28); }
+    .btn-sm { padding: 6px 14px; font-size: 0.78rem; }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 18px;
+      text-align: center;
+    }
+
+    .stat-num { font-size: 2rem; font-weight: 800; color: #fff; }
+    .stat-label { font-size: 0.75rem; color: var(--muted); font-weight: 600; margin-top: 4px; }
+
+    /* Payments List */
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .panel-header h2 { font-size: 1.15rem; font-weight: 800; }
+
+    .filter-tabs { display: flex; gap: 8px; }
+
+    .filter-tab {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .filter-tab.active { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.4); }
+
+    .payment-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+      transition: border-color 0.2s;
+      animation: slideUp 0.35s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .payment-card:hover { border-color: rgba(16, 185, 129, 0.25); }
+    .payment-card.approved { border-color: rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.04); }
+    .payment-card.rejected { border-color: rgba(244, 63, 94, 0.3); background: rgba(244, 63, 94, 0.04); }
+    .payment-card.pending { border-color: rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.04); }
+
+    .proof-thumb {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .proof-thumb:hover { transform: scale(1.05); }
+
+    .proof-pdf-icon {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: var(--rose);
+    }
+
+    .proof-pdf-icon span { font-size: 0.65rem; color: var(--muted); margin-top: 4px; }
+
+    .payment-info { display: flex; flex-direction: column; gap: 5px; }
+
+    .payment-sender { font-size: 1rem; font-weight: 700; color: #fff; }
+
+    .payment-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .payment-id { font-family: monospace; font-size: 0.7rem; color: var(--dim); }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .status-pending { background: rgba(245, 158, 11, 0.2); color: #fcd34d; }
+    .status-approved { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+    .status-rejected { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+
+    .actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+
+    /* Image Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .lightbox.active { display: flex; }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 1.5rem;
+      color: #fff;
+      cursor: pointer;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: fadeInToast 0.3s ease;
+    }
+
+    @keyframes fadeInToast {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    #main-panel { display: none; }
+
+    @media (max-width: 700px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .payment-card { grid-template-columns: 1fr; }
+      .actions { flex-direction: row; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">🧭</div>
+      <div>
+        <h1>WanderWise Admin</h1>
+        <p>Payment Review Panel — Kamran Mohsin</p>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="api-status-badge" id="api-status-badge">
+        <div class="dot" id="api-dot"></div>
+        <span id="api-status-text">Connecting...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Login Section -->
+  <div class="wrapper" id="login-section">
+    <div class="login-section">
+      <div style="font-size: 2.5rem; margin-bottom: 12px;">🔐</div>
+      <h2>Admin Authentication</h2>
+      <p>Enter your admin secret to access the WanderWise payment review panel.</p>
+
+      <label for="api-url-input">Backend URL</label>
+      <input type="text" id="api-url-input" value="http://127.0.0.1:8000">
+
+      <label for="secret-input">Admin Secret</label>
+      <input type="password" id="secret-input" placeholder="Enter admin secret..." onkeydown="if(event.key==='Enter') login()">
+
+      <button class="btn btn-primary" style="width: 100%; margin-top: 4px;" onclick="login()">
+        🔓 Login to Admin Panel
+      </button>
+
+      <div style="margin-top: 18px; padding: 12px; background: rgba(245,158,11,0.08); border-left: 3px solid #f59e0b; border-radius: 6px; text-align: left; font-size: 0.78rem; color: #fcd34d;">
+        ⚠️ <strong>Important:</strong> Make sure the FastAPI backend is running on port 8000 before logging in. Run: <code style="font-size: 0.72rem;">uvicorn main:app --reload</code> in the <code>backend/</code> folder.
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Panel -->
+  <div class="wrapper" id="main-panel">
+
+    <!-- Stats Row -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total" style="color: #ffffff;">—</div>
+        <div class="stat-label">Total Submissions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-pending" style="color: #fcd34d;">—</div>
+        <div class="stat-label">Pending Review</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-approved" style="color: #6ee7b7;">—</div>
+        <div class="stat-label">Approved (PRO Active)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-revoked" style="color: #f59e0b;">—</div>
+        <div class="stat-label">Revoked (PRO Removed)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-rejected" style="color: #fb7185;">—</div>
+        <div class="stat-label">Rejected</div>
+      </div>
+    </div>
+
+    <!-- Payment List -->
+    <div class="panel-header">
+      <div>
+        <h2>Payment Submissions</h2>
+        <p style="font-size: 0.75rem; color: var(--muted); margin-top: 2px;">Review user screenshots, approve genuine Meezan transfers, or revoke active PRO plans.</p>
+      </div>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="filterPayments('all', this)">All</button>
+          <button class="filter-tab" onclick="filterPayments('pending', this)">Pending</button>
+          <button class="filter-tab" onclick="filterPayments('approved', this)">Approved</button>
+          <button class="filter-tab" onclick="filterPayments('revoked', this)">Revoked</button>
+          <button class="filter-tab" onclick="filterPayments('rejected', this)">Rejected</button>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="loadAll()">↻ Refresh</button>
+        <button class="btn btn-danger-outline btn-sm" onclick="resetAllPro()" title="Revoke PRO plan from all users immediately">⚠️ Revoke All PRO</button>
+      </div>
+    </div>
+
+    <div id="payments-list"></div>
+
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close" onclick="closeLightbox()">✕</div>
+    <img id="lightbox-img" src="" alt="Payment Proof">
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script>
+    let API_BASE = 'http://127.0.0.1:8000';
+    let ADMIN_SECRET = '';
+    let allPayments = [];
+    let currentFilter = 'all';
+
+    async function checkApiStatus() {
+      try {
+        const res = await fetch(`${API_BASE}/`);
+        if (res.ok) {
+          document.getElementById('api-status-badge').style.background = 'rgba(16, 185, 129, 0.15)';
+          document.getElementById('api-status-badge').style.color = '#6ee7b7';
+          document.getElementById('api-status-text').textContent = 'Server Online';
+          document.getElementById('api-dot').className = 'dot';
+        } else {
+          throw new Error('not ok');
+        }
+      } catch {
+        document.getElementById('api-status-badge').style.background = 'rgba(244, 63, 94, 0.15)';
+        document.getElementById('api-status-badge').style.color = '#fb7185';
+        document.getElementById('api-status-text').textContent = 'Server Offline';
+        document.getElementById('api-dot').className = 'dot red';
+      }
+    }
+
+    async function login() {
+      API_BASE = document.getElementById('api-url-input').value.trim().replace(/\/$/, '');
+      ADMIN_SECRET = document.getElementById('secret-input').value.trim();
+
+      if (!ADMIN_SECRET) { showToast('⚠️ Enter admin secret first!'); return; }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/stats`, {
+          headers: { 'x-admin-secret': ADMIN_SECRET }
+        });
+        if (!res.ok) { showToast('❌ Wrong admin secret or server not running!'); return; }
+        const stats = await res.json();
+        renderStats(stats);
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('main-panel').style.display = 'block';
+        loadAll();
+        showToast('✅ Admin login successful!');
+      } catch (e) {
+        showToast('❌ Cannot connect to backend. Is uvicorn running on port 8000?');
+      }
+    }
+
+    async function loadAll() {
+      try {
+        const [statsRes, paymentsRes] = await Promise.all([
+          fetch(`${API_BASE}/api/admin/stats`, { headers: { 'x-admin-secret': ADMIN_SECRET } }),
+          fetch(`${API_BASE}/api/admin/payments`, { headers: { 'x-admin-secret': ADMIN_SECRET } })
+        ]);
+        const stats = await statsRes.json();
+        allPayments = await paymentsRes.json();
+        renderStats(stats);
+        renderPayments();
+      } catch (e) {
+        showToast('❌ Failed to load data. Check server connection.');
+      }
+    }
+
+    function renderStats(stats) {
+      document.getElementById('stat-total').textContent = stats.total ?? 0;
+      document.getElementById('stat-pending').textContent = stats.pending ?? 0;
+      document.getElementById('stat-approved').textContent = stats.approved ?? 0;
+      const revokedEl = document.getElementById('stat-revoked');
+      if (revokedEl) revokedEl.textContent = stats.revoked ?? 0;
+      document.getElementById('stat-rejected').textContent = stats.rejected ?? 0;
+    }
+
+    function filterPayments(status, btn) {
+      currentFilter = status;
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderPayments();
+    }
+
+    function renderPayments() {
+      const container = document.getElementById('payments-list');
+      const filtered = currentFilter === 'all' ? allPayments : allPayments.filter(p => p.status === currentFilter);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">${currentFilter === 'all' ? '📭' : currentFilter === 'pending' ? '⏳' : currentFilter === 'approved' ? '✅' : currentFilter === 'revoked' ? '🚫' : '❌'}</div>
+            <div style="font-weight: 700; font-size: 1rem; margin-bottom: 6px;">No ${currentFilter === 'all' ? '' : currentFilter} submissions yet</div>
+            <div style="font-size: 0.85rem;">Payments from users will appear here once submitted.</div>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      filtered.forEach((p, idx) => {
+        const isImg = /\.(jpg|jpeg|png|webp|gif)$/i.test(p.proof_filename);
+        const proofEl = isImg
+          ? `<img class="proof-thumb" src="${API_BASE}/uploads/${p.proof_filename}" alt="Payment Proof" onclick="openLightbox('${API_BASE}/uploads/${p.proof_filename}')" title="Click to view full size">`
+          : `<div class="proof-pdf-icon" onclick="window.open('${API_BASE}/uploads/${p.proof_filename}')"><span>📄</span><span>PDF</span></div>`;
+
+        const statusClass = `status-${p.status}`;
+        let statusBadge = '';
+        let actionBtns = '';
+
+        if (p.status === 'approved') {
+          statusBadge = '<span class="status-pill status-approved">✅ PRO ACTIVE</span>';
+          actionBtns = `
+            <button class="btn btn-revoke btn-sm" onclick="updateStatus('${p.id}', 'revoke')" title="Remove PRO plan from this user">🚫 Revoke PRO</button>
+            <button class="btn btn-delete btn-sm" onclick="deletePayment('${p.id}')" title="Delete record">🗑️ Delete</button>
+          `;
+        } else if (p.status === 'revoked') {
+          statusBadge = '<span class="status-pill status-revoked" style="background: rgba(245,158,11,0.2); color: #fcd34d;">🚫 PLAN REVOKED</span>';
+          actionBtns = `
+            <button class="btn btn-approve btn-sm" onclick="updateStatus('${p.id}', 'approve')">✓ Re-Activate PRO</button>
+            <button class="btn btn-delete btn-sm" onclick="deletePayment('${p.id}')">🗑️ Delete</button>
+          `;
+        } else if (p.status === 'rejected') {
+          statusBadge = '<span class="status-pill status-rejected">❌ REJECTED</span>';
+          actionBtns = `
+            <button class="btn btn-approve btn-sm" onclick="updateStatus('${p.id}', 'approve')">✓ Approve Anyway</button>
+            <button class="btn btn-delete btn-sm" onclick="deletePayment('${p.id}')">🗑️ Delete</button>
+          `;
+        } else {
+          statusBadge = '<span class="status-pill status-pending">⏳ PENDING REVIEW</span>';
+          actionBtns = `
+            <button class="btn btn-approve btn-sm" onclick="updateStatus('${p.id}', 'approve')">✓ Approve & Activate PRO</button>
+            <button class="btn btn-reject btn-sm" onclick="updateStatus('${p.id}', 'reject')">✕ Reject</button>
+            <button class="btn btn-delete btn-sm" onclick="deletePayment('${p.id}')">🗑️</button>
+          `;
+        }
+
+        const card = document.createElement('div');
+        card.className = `payment-card ${p.status}`;
+        card.style.animationDelay = `${idx * 50}ms`;
+        card.innerHTML = `
+          ${proofEl}
+          <div class="payment-info">
+            <div class="payment-sender">📱 ${escapeHtml(p.sender_info)}</div>
+            <div class="payment-meta">
+              <span>📅 Submitted: ${new Date(p.submitted_at).toLocaleString('en-PK', { timeZone: 'Asia/Karachi' })}</span>
+              ${p.reviewed_at ? `<span>✓ Reviewed: ${new Date(p.reviewed_at).toLocaleString('en-PK', { timeZone: 'Asia/Karachi' })}</span>` : ''}
+            </div>
+            <div class="payment-id">Submission ID: ${p.id}</div>
+            <div>${statusBadge}</div>
+          </div>
+          <div class="actions">${actionBtns}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function updateStatus(id, action) {
+      const actionLabels = {
+        approve: 'Approve & Activate PRO',
+        revoke: 'Revoke PRO Plan (Remove Active Plan)',
+        reject: 'Reject Payment'
+      };
+      if (action === 'revoke') {
+        if (!confirm('Are you sure you want to REVOKE the PRO plan for this user? This will remove PRO status.')) return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/${action}/${id}`, {
+          method: 'POST',
+          headers: { 'x-admin-secret': ADMIN_SECRET }
+        });
+        if (!res.ok) throw new Error();
+        if (action === 'approve') {
+          showToast('✅ Payment approved! PRO plan is now active for this user.');
+        } else if (action === 'revoke') {
+          showToast('🚫 PRO Plan REVOKED! User will be demoted back to Free Explorer.');
+        } else {
+          showToast('❌ Payment rejected.');
+        }
+        loadAll();
+      } catch {
+        showToast('❌ Failed to update status.');
+      }
+    }
+
+    async function deletePayment(id) {
+      if (!confirm('Are you sure you want to permanently delete this submission record?')) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/delete/${id}`, {
+          method: 'DELETE',
+          headers: { 'x-admin-secret': ADMIN_SECRET }
+        });
+        if (!res.ok) throw new Error();
+        showToast('🗑️ Record deleted successfully.');
+        loadAll();
+      } catch {
+        showToast('❌ Failed to delete record.');
+      }
+    }
+
+    async function resetAllPro() {
+      if (!confirm('⚠️ Are you sure you want to REVOKE PRO from ALL users? All users will revert to Free Explorer plan.')) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/reset-all-pro`, {
+          method: 'POST',
+          headers: { 'x-admin-secret': ADMIN_SECRET }
+        });
+        if (!res.ok) throw new Error();
+        showToast('🔄 All PRO plans have been revoked!');
+        loadAll();
+      } catch {
+        showToast('❌ Failed to reset PRO plans.');
+      }
+    }
+
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = msg;
+      document.getElementById('toast-container').appendChild(t);
+      setTimeout(() => t.remove(), 4000);
+    }
+
+    checkApiStatus();
+    setInterval(checkApiStatus, 30000);
+    setInterval(() => {
+      if (document.getElementById('main-panel').style.display !== 'none') {
+        loadAll();
+      }
+    }, 15000);
+  </script>
+
+</body>
+</html>
