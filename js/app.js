@@ -7,7 +7,7 @@ class WanderWiseApp {
     this.exchangeRate = 278;
     this.selectedMemberAvatar = "👨‍💻";
     this.attachedProofFile = null;
-    this.apiBase = "http://127.0.0.1:8000";
+    this.apiBase = "https://wanderwise-bavkend.onrender.com";
     this.chatbotOpen = false;
     this.initElements();
     this.bindEvents();
