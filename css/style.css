@@ -3594,15 +3594,286 @@ img, video, canvas, svg, iframe {
   gap: 12px;
 }
 
-@media (max-width: 480px) {
-  .trip-summary-banner { grid-template-columns: repeat(2, 1fr); }
+/* ==========================================================================
+   WANDERWISE MASTER RESPONSIVE SYSTEM (All Devices & Screen Sizes)
+   ========================================================================== */
+
+/* 1. TABLET & LAPTOP (<= 1024px) */
+@media (max-width: 1024px) {
   .hero-split-grid { grid-template-columns: 1fr !important; }
-  .pricing-plans-grid { grid-template-columns: 1fr !important; }
-  .pro-steps-guide-row { grid-template-columns: 1fr !important; }
+  .itinerary-header-bar { grid-template-columns: 1fr !important; }
+  .itinerary-main-grid { grid-template-columns: 1fr !important; }
   .fairshare-grid { grid-template-columns: 1fr !important; }
+  .checklist-view-grid { grid-template-columns: 1fr !important; }
   .weather-view-grid { grid-template-columns: 1fr !important; }
-  .budget-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  .home-stats-row { grid-template-columns: repeat(2, 1fr) !important; }
-  .bank-account-copy-row { flex-direction: column; gap: 8px; }
-  .account-num-display { font-size: 1rem !important; }
+  .pricing-plans-grid { grid-template-columns: 1fr !important; max-width: 480px; margin: 0 auto; }
+  .pro-steps-guide-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 2. TABLET PORTRAIT & MEDIUM PHONES (<= 768px) */
+@media (max-width: 768px) {
+  /* Shell & Navigation */
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 200;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+  }
+  .sidebar-overlay {
+    display: block;
+  }
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+  .mobile-menu-btn {
+    display: block !important;
+  }
+
+  /* Topbar */
+  .topbar {
+    padding: 0 14px;
+    height: 64px;
+    gap: 8px;
+  }
+  .breadcrumb-area {
+    min-width: 0;
+  }
+  .page-title {
+    font-size: 1.05rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .page-subtitle {
+    display: none !important;
+  }
+  .rain-mode-chip .rain-label {
+    display: none !important;
+  }
+  .currency-pill {
+    display: none !important;
+  }
+
+  /* View Container */
+  .view-container {
+    padding: 14px 12px 60px 12px !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Page 1: Hero & Quiz */
+  .hero-card {
+    min-height: 420px;
+    padding: 24px 18px;
+  }
+  .hero-title {
+    font-size: 1.85rem;
+  }
+  .hero-features-row {
+    grid-template-columns: 1fr;
+  }
+  .quiz-panel-card {
+    padding: 20px 16px;
+  }
+
+  /* Page 2: Itinerary */
+  .trip-summary-banner {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+  }
+  .days-pills-row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 6px;
+  }
+  .days-pills-row::-webkit-scrollbar {
+    display: none;
+  }
+  .day-tab-btn {
+    flex-shrink: 0 !important;
+  }
+
+  /* Page 3: Budget */
+  .budget-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+  }
+  .home-stats-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+  }
+
+  /* Page 4: Vault */
+  .emergency-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .hotel-address-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .qr-box {
+    margin-top: 10px;
+  }
+
+  /* Modals */
+  .modal-box {
+    padding: 22px 16px !important;
+    margin: 10px !important;
+    max-height: 90vh !important;
+    width: 94vw !important;
+  }
+}
+
+/* 3. MOBILE PHONES (<= 540px) */
+@media (max-width: 540px) {
+  /* Hero */
+  .hero-card {
+    min-height: 360px;
+    padding: 20px 14px;
+  }
+  .hero-title {
+    font-size: 1.55rem;
+    line-height: 1.25;
+  }
+  .hero-desc {
+    font-size: 0.82rem;
+  }
+  .hero-pill-badge {
+    font-size: 0.68rem;
+    padding: 4px 10px;
+  }
+  .hero-btn-row {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+  .hero-btn-row button {
+    width: 100% !important;
+    justify-content: center;
+  }
+
+  /* Quiz Controls */
+  .date-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .vibe-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px;
+  }
+  .vibe-card {
+    padding: 12px 14px;
+  }
+  .quiz-header h2 {
+    font-size: 1.2rem;
+  }
+
+  /* Itinerary */
+  .timeline-card {
+    padding: 16px 12px;
+  }
+  .timeline-card-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .timeline-card-header button {
+    width: 100%;
+    justify-content: center;
+  }
+  .activity-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  /* Vault & SOS */
+  .vault-tabs-row {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .vault-tab-btn {
+    flex: 1 1 100% !important;
+    justify-content: center !important;
+    font-size: 0.82rem !important;
+    padding: 8px 12px !important;
+  }
+  .emergency-header-action {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .btn-print-action, .btn-print-action button {
+    width: 100% !important;
+    justify-content: center;
+  }
+
+  /* PRO View */
+  .pro-steps-guide-row {
+    grid-template-columns: 1fr !important;
+  }
+  .pro-step-guide-card {
+    padding: 16px 12px;
+  }
+  .pro-activation-card {
+    padding: 24px 16px;
+  }
+  .pro-activation-title {
+    font-size: 1.45rem;
+  }
+  .pro-active-features-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Chatbot */
+  .chatbot-window {
+    width: calc(100vw - 20px) !important;
+    right: 10px !important;
+    bottom: 80px !important;
+    max-height: 75vh !important;
+  }
+  .chatbot-fab {
+    bottom: 16px !important;
+    right: 16px !important;
+  }
+}
+
+/* 4. EXTRA SMALL SCREENS (<= 380px) */
+@media (max-width: 380px) {
+  .topbar {
+    padding: 0 10px;
+    height: 56px;
+  }
+  .page-title {
+    font-size: 0.88rem;
+  }
+  .home-stats-row {
+    grid-template-columns: 1fr !important;
+  }
+  .trip-summary-banner {
+    grid-template-columns: 1fr !important;
+  }
+  .budget-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .stat-metric-val {
+    font-size: 1.15rem;
+  }
+  .bank-account-copy-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .account-num-display {
+    font-size: 0.95rem !important;
+  }
+  .avatar-selector-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 4px;
+  }
 }
