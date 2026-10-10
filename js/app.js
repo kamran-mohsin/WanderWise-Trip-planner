@@ -18,23 +18,87 @@ class WanderWiseApp {
     this.checkPendingPaymentStatus();
   }
   loadState() {
+    let state = null;
     try {
       const saved = localStorage.getItem(this.storageKey);
       if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.trip) {
-          parsed.trip.isPro = false;
-          return parsed;
-        }
+        state = JSON.parse(saved);
       }
     } catch (e) {}
 
-    const defaultData = JSON.parse(JSON.stringify(INITIAL_DATA));
-    if (defaultData && defaultData.trip) {
-      defaultData.trip.isPro = false;
+    if (!state || !state.trip) {
+      state = JSON.parse(JSON.stringify(INITIAL_DATA));
     }
-    return defaultData;
+
+    if (state.trip) {
+      state.trip.isPro = false;
+      if (!state.trip.departureCity)
+        state.trip.departureCity = "Islamabad, Pakistan";
+      if (!state.trip.destination)
+        state.trip.destination = "Swat Valley, Pakistan";
+      if (!state.trip.startDate) state.trip.startDate = "2026-10-15";
+      if (!state.trip.endDate) state.trip.endDate = "2026-10-20";
+      if (!state.trip.datesDisplay)
+        state.trip.datesDisplay = "Oct 15 - Oct 20 (5 Days)";
+      if (!state.trip.totalBudget) state.trip.totalBudget = 250000;
+      if (!state.trip.travelers) state.trip.travelers = 3;
+    }
+
+    if (!state.members || state.members.length === 0) {
+      state.members = [
+        {
+          id: "m1",
+          name: state.trip.userName || "Kamran Mohsin",
+          avatar: "👨‍💻",
+          isOrganizer: true,
+        },
+        { id: "m2", name: "Ali Ahmed", avatar: "🧗", isOrganizer: false },
+        { id: "m3", name: "Sara Khan", avatar: "👩‍🦰", isOrganizer: false },
+      ];
+    }
+
+    if (!state.expenses || state.expenses.length === 0) {
+      state.expenses = [
+        {
+          id: "e1",
+          title: "Transport / Fuel Advance",
+          amount: 18500,
+          payerId: "m1",
+          category: "transport",
+          date: "15 Oct 2026",
+        },
+        {
+          id: "e2",
+          title: "Traditional Trout Fish Dinner",
+          amount: 11000,
+          payerId: "m2",
+          category: "food",
+          date: "16 Oct 2026",
+        },
+      ];
+    }
+
+    if (!state.itineraryDays || state.itineraryDays.length === 0) {
+      const result = generateDynamicItinerary(
+        state.trip.destination || "Swat Valley, Pakistan",
+        state.trip.startDate || "2026-10-15",
+        state.trip.endDate || "2026-10-20",
+      );
+      state.itineraryDays = result.days;
+      state.trip.datesDisplay = result.datesDisplay;
+    }
+
+    return state;
   }
+
+  saveState() {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.state));
+    } catch (e) {
+      console.warn("Failed to persist WanderWise state:", e);
+    }
+  }
+
   initElements() {
     this.navItems = document.querySelectorAll(".sidebar-nav .nav-item");
     this.pageViews = document.querySelectorAll(".page-view");
@@ -438,7 +502,7 @@ class WanderWiseApp {
     if (saveBudgetModalBtn) {
       saveBudgetModalBtn.addEventListener("click", () => {
         const modalInput = document.getElementById("edit-budget-input");
-        const newBudget = Number(modalInput.value) || 0;
+        const newBudget = Number(modalInput ? modalInput.value : 0) || 250000;
         if (newBudget <= 0) {
           this.showToast("⚠️ Please enter a valid total budget amount!");
           return;
@@ -446,7 +510,9 @@ class WanderWiseApp {
         this.state.trip.totalBudget = newBudget;
         if (this.inputBudget) this.inputBudget.value = newBudget;
         this.saveState();
-        this.budgetModal.classList.remove("active");
+        if (this.budgetModal) this.budgetModal.classList.remove("active");
+        const bModal = document.getElementById("edit-budget-modal");
+        if (bModal) bModal.classList.remove("active");
         this.renderBudget();
         this.updateBudgetSyncElements();
         this.showToast(
@@ -1268,68 +1334,51 @@ class WanderWiseApp {
   }
 
   saveTripDetailsAndProceed() {
-    const dest = this.destSearchInput
+    let dest = this.destSearchInput
       ? this.destSearchInput.value.trim()
-      : this.state.trip.destination;
+      : this.state.trip.destination || "Swat Valley, Pakistan";
+    if (!dest) dest = this.state.trip.destination || "Swat Valley, Pakistan";
+
     const depCityInput = document.getElementById("input-departure-city");
-    const departureCity = depCityInput
+    let departureCity = depCityInput
       ? depCityInput.value.trim()
-      : this.state.trip.departureCity;
-    const start = this.inputStartDate
+      : this.state.trip.departureCity || "Islamabad, Pakistan";
+    if (!departureCity) departureCity = "Islamabad, Pakistan";
+
+    let start = this.inputStartDate
       ? this.inputStartDate.value
       : this.state.trip.startDate;
-    const end = this.inputEndDate
+    let end = this.inputEndDate
       ? this.inputEndDate.value
       : this.state.trip.endDate;
+
+    if (!start) start = "2026-10-15";
+    if (!end) end = "2026-10-20";
+
     const budget = this.inputBudget
-      ? Number(this.inputBudget.value)
-      : this.state.trip.totalBudget;
+      ? Number(this.inputBudget.value) || 250000
+      : this.state.trip.totalBudget || 250000;
+
     const travelers = this.inputTravelers
-      ? Number(this.inputTravelers.value)
-      : this.state.trip.travelers;
-
-    if (!departureCity) {
-      this.showToast(
-        "⚠️ Please enter your departure city (where you are starting from)!",
-      );
-      return;
-    }
-
-    if (!dest) {
-      this.showToast("⚠️ Please enter a destination before proceeding!");
-      return;
-    }
-
-    if (dest.toLowerCase().trim() === departureCity.toLowerCase().trim()) {
-      this.showToast(
-        "⚠️ Destination cannot be the same as your departure city!",
-      );
-      return;
-    }
-
-    if (!start || !end) {
-      this.showToast("⚠️ Please select both start and end dates!");
-      return;
-    }
-
-    if (new Date(end) < new Date(start)) {
-      this.showToast("⚠️ End date must be after start date!");
-      return;
-    }
-
-    if (budget <= 0) {
-      this.showToast("⚠️ Please enter a valid budget amount!");
-      return;
-    }
+      ? Number(this.inputTravelers.value) || 2
+      : this.state.trip.travelers || 2;
 
     this.state.trip.departureCity = departureCity;
+    this.state.trip.destination = dest;
     this.state.trip.totalBudget = budget;
-    this.state.trip.travelers = travelers || 2;
+    this.state.trip.travelers = travelers;
+    this.state.trip.startDate = start;
+    this.state.trip.endDate = end;
+
+    if (this.destSearchInput) this.destSearchInput.value = dest;
+    if (depCityInput) depCityInput.value = departureCity;
+    if (this.inputStartDate) this.inputStartDate.value = start;
+    if (this.inputEndDate) this.inputEndDate.value = end;
 
     this.applyDestinationAndDates(dest, start, end);
     this.switchView("view-itinerary");
     this.showToast(
-      `✅ Trip from ${departureCity} → "${dest}" configured & synced!`,
+      `✅ Trip to "${dest}" configured! Welcome to Smart Itinerary.`,
     );
   }
 
@@ -2733,7 +2782,22 @@ class WanderWiseApp {
     const title = titleInput ? titleInput.value.trim() : "";
     if (!title) {
       this.showToast("⚠️ Please specify an activity title!");
+      if (titleInput) titleInput.focus();
       return;
+    }
+
+    if (!this.state.itineraryDays || this.state.itineraryDays.length === 0) {
+      const result = generateDynamicItinerary(
+        this.state.trip.destination || "Swat Valley, Pakistan",
+        this.state.trip.startDate || "2026-10-15",
+        this.state.trip.endDate || "2026-10-20",
+      );
+      this.state.itineraryDays = result.days;
+      this.currentDayIndex = 0;
+    }
+
+    if (this.currentDayIndex >= this.state.itineraryDays.length) {
+      this.currentDayIndex = 0;
     }
 
     const currentDay = this.state.itineraryDays[this.currentDayIndex];
@@ -2755,7 +2819,9 @@ class WanderWiseApp {
       });
 
       this.saveState();
-      this.activityModal.classList.remove("active");
+      if (this.activityModal) this.activityModal.classList.remove("active");
+      const actModalEl = document.getElementById("add-activity-modal");
+      if (actModalEl) actModalEl.classList.remove("active");
       if (titleInput) titleInput.value = "";
 
       this.renderItinerary();
@@ -3125,6 +3191,14 @@ class WanderWiseApp {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  window.app = new WanderWiseApp();
-});
+function initWanderWiseApp() {
+  if (!window.app) {
+    window.app = new WanderWiseApp();
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initWanderWiseApp);
+} else {
+  initWanderWiseApp();
+}

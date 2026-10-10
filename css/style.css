@@ -2600,9 +2600,11 @@ img, video, canvas, svg, iframe {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  pointer-events: none;
 }
 
 .toast {
+  pointer-events: auto;
   padding: 12px 20px;
   border-radius: var(--radius-md);
   background: var(--bg-card-solid);
@@ -2735,7 +2737,12 @@ img, video, canvas, svg, iframe {
   }
 
   .sidebar-overlay {
+    display: none;
+    pointer-events: none;
+  }
+  .sidebar-overlay.active {
     display: block;
+    pointer-events: auto;
   }
 
   .main-content {
@@ -3622,7 +3629,12 @@ img, video, canvas, svg, iframe {
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
   }
   .sidebar-overlay {
-    display: block;
+    display: none;
+    pointer-events: none;
+  }
+  .sidebar-overlay.active {
+    display: block !important;
+    pointer-events: auto !important;
   }
   .main-content {
     margin-left: 0 !important;

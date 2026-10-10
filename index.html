@@ -3900,7 +3900,7 @@
           nodes.forEach(convertTextNode);
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
+        function startIconObserver() {
           convert();
           const observer = new MutationObserver((mutations) => {
             observer.disconnect();
@@ -3917,7 +3917,13 @@
             observer.observe(document.body, { childList: true, subtree: true });
           });
           observer.observe(document.body, { childList: true, subtree: true });
-        });
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", startIconObserver);
+        } else {
+          startIconObserver();
+        }
       })();
     </script>
 
