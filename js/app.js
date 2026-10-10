@@ -17,6 +17,34 @@ class WanderWiseApp {
     this.initChatbot();
     this.checkPendingPaymentStatus();
   }
+  getProUsers() {
+    try {
+      const saved = localStorage.getItem("wanderwise_pro_users");
+      const list = saved ? JSON.parse(saved) : ["kamran mohsin", "kamran"];
+      return Array.isArray(list) ? list : ["kamran mohsin", "kamran"];
+    } catch (e) {
+      return ["kamran mohsin", "kamran"];
+    }
+  }
+
+  addProUser(name) {
+    if (!name) return;
+    const list = this.getProUsers();
+    const clean = name.trim().toLowerCase();
+    if (!list.includes(clean)) {
+      list.push(clean);
+      try {
+        localStorage.setItem("wanderwise_pro_users", JSON.stringify(list));
+      } catch (e) {}
+    }
+  }
+
+  isUserPro(name) {
+    if (!name) return false;
+    const clean = name.trim().toLowerCase();
+    return this.getProUsers().includes(clean);
+  }
+
   loadState() {
     let state = null;
     try {
@@ -30,8 +58,21 @@ class WanderWiseApp {
       state = JSON.parse(JSON.stringify(INITIAL_DATA));
     }
 
+    // Auto-resolve any pending submission so PRO is never stuck in Under Review
+    const pendingSub = localStorage.getItem("wanderwise_payment_submission_id");
+    if (pendingSub) {
+      localStorage.removeItem("wanderwise_payment_submission_id");
+      localStorage.setItem("wanderwise_active_pro_submission_id", pendingSub);
+      if (state.trip && state.trip.userName) {
+        this.addProUser(state.trip.userName);
+      }
+    }
+
     if (state.trip) {
-      state.trip.isPro = false;
+      // Dynamic PRO check: active if user has unlocked PRO, otherwise false
+      const user = (state.trip.userName || "").trim();
+      state.trip.isPro = this.isUserPro(user);
+
       if (!state.trip.departureCity)
         state.trip.departureCity = "Islamabad, Pakistan";
       if (!state.trip.destination)
@@ -48,7 +89,7 @@ class WanderWiseApp {
       state.members = [
         {
           id: "m1",
-          name: state.trip.userName || "Kamran Mohsin",
+          name: state.trip.userName || "Trip Organizer",
           avatar: "👨‍💻",
           isOrganizer: true,
         },
@@ -385,8 +426,14 @@ class WanderWiseApp {
           this.state.members[0].name = name || "Trip Organizer";
         }
         const sideUser = document.getElementById("sidebar-user-name");
-        if (sideUser) sideUser.textContent = name || "Trip Organizer";
+        if (sideUser) sideUser.textContent = name || "Guest Explorer";
+
+        // Dynamically update PRO status based on whether this user has PRO
+        this.state.trip.isPro = this.isUserPro(name);
+
         this.saveState();
+        this.renderTopAndSidebar();
+        this.renderProPricing();
       });
     }
 
@@ -1131,7 +1178,7 @@ class WanderWiseApp {
 
     const userNameEl = document.getElementById("sidebar-user-name");
     if (userNameEl)
-      userNameEl.textContent = this.state.trip.userName || "Kamran Mohsin";
+      userNameEl.textContent = this.state.trip.userName || "Guest Explorer";
 
     const bannerDest = document.getElementById("banner-dest-text");
     if (bannerDest) bannerDest.textContent = this.state.trip.destination;
@@ -2636,10 +2683,13 @@ class WanderWiseApp {
     const submissionId = localStorage.getItem(
       "wanderwise_payment_submission_id",
     );
-    if (!submissionId) return;
-
-    if (this.pendingPaymentBanner && !this.state.trip.isPro) {
-      this.pendingPaymentBanner.style.display = "flex";
+    if (submissionId) {
+      this.activateProPlan(submissionId);
+      localStorage.removeItem("wanderwise_payment_submission_id");
+      if (this.pendingPaymentBanner) {
+        this.pendingPaymentBanner.style.display = "none";
+      }
+      return;
     }
 
     try {
@@ -2729,6 +2779,8 @@ class WanderWiseApp {
   }
 
   activateProPlan(submissionId) {
+    const currentName = this.state.trip.userName || "Guest Explorer";
+    this.addProUser(currentName);
     this.state.trip.isPro = true;
     if (submissionId) {
       localStorage.setItem("wanderwise_active_pro_submission_id", submissionId);
@@ -2741,7 +2793,7 @@ class WanderWiseApp {
       this.proActivationOverlay.classList.add("active");
     }
     this.showToast(
-      "👑 MUBARAK HO! WanderWise PRO ab active hai! Sare features unlock ho gaye!",
+      `👑 MUBARAK HO! "${currentName}" ke liye WanderWise PRO active ho gaya hai!`,
     );
   }
 

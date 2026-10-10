@@ -427,7 +427,7 @@ const INITIAL_DATA = {
     hotelName: "",
     hotelLocalScript: "",
     bookingRef: "",
-    userName: "Kamran Mohsin",
+    userName: "",
     isPro:false,
     weather: {
       tempC: 22,
